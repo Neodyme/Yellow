@@ -5,7 +5,7 @@
 // Login   <pprost@epitech.net>
 // 
 // Started on  Tue Dec 23 12:37:52 2014 Prost P.
-// Last update Mon Jan  5 17:58:26 2015 Prost P.
+// Last update Mon Jan  5 18:32:32 2015 Prost P.
 //
 
 #include <iostream>
@@ -40,6 +40,9 @@
 #include<sys/socket.h>
 #include<arpa/inet.h>
 #include <net/if.h>
+
+#include <linux/if_packet.h>
+#include <linux/if_ether.h>
 
 #include<sys/ioctl.h>
 #include<sys/time.h>
@@ -339,7 +342,8 @@ void *stage25(void *args)
   struct sockaddr saddr;
   struct pcap_file_header  header;
   struct pcap_pkthdr_legacy pkthdr;
-
+  struct sockaddr_ll sll;
+ 
   struct ifreq ifr;
   
   struct timeval tv;
@@ -371,12 +375,24 @@ void *stage25(void *args)
   bzero(&ifr , sizeof(struct ifreq ));
   /* First Get the Interface Index */
 
-  strncpy((char *) ifr.ifr_name , "wlan0", IFNAMSIZ);
+  strncpy((char *) ifr.ifr_name , ((probe_args*)args)->tapping_iface.c_str(), IFNAMSIZ);
   if((ioctl(sock_raw , SIOCGIFINDEX , & ifr )) == - 1)
     {
       printf("Error getting Interface index ! \n"); exit( - 1);
     }
   
+  /* Bind our raw socket to this interface */
+  sll.sll_family = AF_PACKET;
+  sll.sll_ifindex = ifr.ifr_ifindex;
+  sll.sll_protocol = htons(ETH_P_ALL);
+
+  if((bind(sock_raw, (struct sockaddr *)&sll, sizeof(sll)))== -1)
+    {
+      perror("bind");
+      return NULL;
+    }
+   
+
   // setsockopt(sock_raw,
   // 	     SOL_SOCKET,
   // 	     SO_BINDTODEVICE,
@@ -398,14 +414,13 @@ void *stage25(void *args)
       //Receive a packet
       data_size = recvfrom(sock_raw , buffer + sizeof (struct pcap_pkthdr_legacy) , 65536 , 0 , &saddr , (socklen_t*)&saddr_size);
 
-      // if ((((struct iphdr*)(buffer + sizeof(struct ethhdr)))->protocol == 6) and
-      // 	  (((struct tcphdr*)(buffer + ((struct iphdr *)(buffer  + sizeof(struct ethhdr)))->ihl * 4
-      // 			     + sizeof(struct ethhdr)))->source == htons(1337)))
-      // 	{
-      // 	  printf("nok\n");
-      // 	  continue;
-      // 	}
-      // printf("%ld %d %d\n", (clock() - timestamp) / CLOCKS_PER_SEC,  (clock() - timestamp) % CLOCKS_PER_SEC, data_size); 
+      if ((((struct iphdr*)(buffer + sizeof(struct ethhdr)))->protocol == 6) and
+      	  (((struct tcphdr*)(buffer + ((struct iphdr *)(buffer  + sizeof(struct ethhdr)))->ihl * 4
+      			     + sizeof(struct ethhdr)))->source == htons(1337)))
+      	{
+      	  printf("nok\n");
+      	  continue;
+      	}
 
       gettimeofday(&tv, NULL);
 
