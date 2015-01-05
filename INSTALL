@@ -1,4 +1,4 @@
-Build Dependencys:
+Build Dependancies:
 	build-essential
 	git
 	g++
@@ -10,3 +10,7 @@ Build Dependencys:
 	libxslt1-dev
 	qtmobility-dev
 	libtins-dev
+
+python dependancies:
+       python-pyside.qtcore
+       python-pypcap
