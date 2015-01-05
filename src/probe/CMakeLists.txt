@@ -3,10 +3,6 @@ project (YELLOW)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/")
 
-find_package(LibTINS REQUIRED)
-include_directories(${LibTINS_INCLUDE_DIRS})
-set(LIBS ${LIBS} ${LibTINS_LIBRARIES})
-include_directories(${LIBTINS_INCLUDE_DIRS})
 include_directories(.)
 
 find_package (Threads)
