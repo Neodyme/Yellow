@@ -1,7 +1,6 @@
 from PySide import QtCore, QtGui
 import sys
 
-import test
 import GUI
 
 class Gui(QtGui.QWidget, GUI.Ui_GUI):
@@ -23,12 +22,53 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		self.packetList.append(['8', '01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test 8', 'Info Test Line 8', 'Packet Content 8'])
 		self.packetList.append(['9', '01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test 9', 'Info Test Line 9', 'Packet Content 9'])
 		self.packetNumber = len(self.packetList)
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
+		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
 		for i in range(self.packetNumber):
 			self.addPacketLine(self.packetList[i][0], self.packetList[i][1], self.packetList[i][2], self.packetList[i][3], self.packetList[i][4], self.packetList[i][5])
 		pass
 
 	def addReceivedPacket(self, packet):
 		self.packetNumber += 1
+		packet.insert(0, str(self.packetNumber))
+		self.packetList.append(packet)
 		# ajoute le paquet dans self.packetList, dans la dernière cellule non visible, et remplir les précédentes pour le résumé pour le stocker -> A voir avec Fred en fonction de comment il recoit et m'envoie les infos
 		pass
 
@@ -61,23 +101,25 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 
 class MainWindow(QtGui.QMainWindow):
 	def __init__(self, parent=None):
-		super(MainWindow, self).__init__(parent)
-		
+		super(MainWindow, self).__init__(parent)		
 		self.createMenu()
 		self.init_Ui()
 
 	def init_Ui(self):
 		self.resize(1080,720)
+		# self.showMaximized()
 		self.setWindowTitle('WireShark Remake')
 
-		self.window = QtGui.QWidget()
+		self.window = QtGui.QScrollArea()
 		self.setCentralWidget(self.window)
 		self.window.showMaximized()
 
 		self.gui = Gui()
-		self.mainLayout = QtGui.QVBoxLayout()
+		self.gui2 = Gui()
+		self.mainLayout = QtGui.QHBoxLayout()
 		self.mainLayout.setMenuBar(self.menuBar)
 		self.mainLayout.addWidget(self.gui)
+		self.mainLayout.addWidget(self.gui2)
 
 		self.window.setLayout(self.mainLayout)
 
@@ -99,15 +141,6 @@ def main(argv):
 	mwindow = MainWindow()
 
 	mwindow.show()
-
-	# TEST
-	mwindow.gui.addReceivedPacket('aze')
-	i = 9
-	mwindow.gui.packetList.append(['10', '01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-	mwindow.gui.addPacketLine(mwindow.gui.packetList[i][0], mwindow.gui.packetList[i][1], mwindow.gui.packetList[i][2], mwindow.gui.packetList[i][3], mwindow.gui.packetList[i][4], mwindow.gui.packetList[i][5])
-	# END OF TEST
-
-
 
 	# ici intanciation des sockets (ou avant peu importe)
 	# puis la reception de packets qui appelleront alors addReceivedPacket
