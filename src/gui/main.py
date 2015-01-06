@@ -10,97 +10,120 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 	def __init__(self, parent=None):
 		super(Gui, self).__init__(parent)
 		self.setupUi(self)
+		self.init_Ui()
 		self.init()
+
+	def init_Ui(self):
+		# currentCellChanged ( int currentRow, int currentColumn, int previousRow, int previousColumn )
+		# self.tableWidget.currentItemChanged.connect(self.affPacket)
+		self.tableWidget.currentCellChanged.connect(self.affPacket)
 
 	def init(self):
 		self.packetList = list()
-		self.tableWidget.currentItemChanged.connect(self.affPacket)
-		self.packetList.append(['1', '01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test', 'Info Test Line', 'Packet Content 1'])
-		self.packetList.append(['2', '01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test 2', 'Info Test Line 2', 'Packet Content 2'])
-		self.packetList.append(['3', '01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test 3', 'Info Test Line 3', 'Packet Content 3'])
-		self.packetList.append(['4', '01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test 4', 'Info Test Line 4', 'Packet Content 4'])
-		self.packetList.append(['5', '01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test 5', 'Info Test Line 5', 'Packet Content 5'])
-		self.packetList.append(['6', '01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test 6', 'Info Test Line 6', 'Packet Content 6'])
-		self.packetList.append(['7', '01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test 7', 'Info Test Line 7', 'Packet Content 7'])
-		self.packetList.append(['8', '01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test 8', 'Info Test Line 8', 'Packet Content 8'])
-		self.packetList.append(['9', '01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test 9', 'Info Test Line 9', 'Packet Content 9'])
-		self.packetNumber = len(self.packetList)
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		self.addReceivedPacket(['01-01-2015', '127.0.0.1', '127.0.0.1', 'Protocol Test uytuyhkj', 'Info Test Line HGIUG', 'Packet Content KJHGFCHGVJ'])
-		for i in range(self.packetNumber):
-			self.addPacketLine(self.packetList[i][0], self.packetList[i][1], self.packetList[i][2], self.packetList[i][3], self.packetList[i][4], self.packetList[i][5])
+		self.packetNumber = 0
+
+		# TEST
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV PREV')])])
+		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', 'ICIIIIIIIIIIIII'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '666'), ('Checksum', '666'), ('Data', 'DATA UQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZV')])])
+		# END OF TEST
 		pass
 
+	# refaire l'add avec les bonnes lists
 	def addReceivedPacket(self, packet):
 		self.packetNumber += 1
-		packet.insert(0, str(self.packetNumber))
+		packet[0]['ID'] = self.packetNumber
 		self.packetList.append(packet)
-		# ajoute le paquet dans self.packetList, dans la dernière cellule non visible, et remplir les précédentes pour le résumé pour le stocker -> A voir avec Fred en fonction de comment il recoit et m'envoie les infos
-		pass
+		self.addPacketLine(packet[0])
+		
+		# TEST
+		# "\r\n"
+		# TCP REF = [dict([('ID', 1), ('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])]
+		# UDP REF = [dict([('ID', 2), ('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])]
+		# END OF TEST
+		return
 
-	def addPacketLine(self, number, time, source, destination, protocol, info):
+	def addPacketLine(self, header):
+		idItem = QtGui.QTableWidgetItem()
+		dateItem = QtGui.QTableWidgetItem()
 		timeItem = QtGui.QTableWidgetItem()
-		sourceItem = QtGui.QTableWidgetItem()
-		destinationItem = QtGui.QTableWidgetItem()
+		macSItem = QtGui.QTableWidgetItem()
+		macDItem = QtGui.QTableWidgetItem()
+		versionItem = QtGui.QTableWidgetItem()
+		headerItem = QtGui.QTableWidgetItem()
+		ttlItem = QtGui.QTableWidgetItem()
 		protocolItem = QtGui.QTableWidgetItem()
-		infoItem = QtGui.QTableWidgetItem()
-		self.tableWidget.insertRow(int(number) - 1)
+		ipSItem = QtGui.QTableWidgetItem()
+		ipDItem = QtGui.QTableWidgetItem()
+		injectItem = QtGui.QTableWidgetItem()
+		self.tableWidget.insertRow(header['ID'] - 1)
 
-		timeItem.setText(time)
-		sourceItem.setText(source)
-		destinationItem.setText(destination)
-		protocolItem.setText(protocol)
-		infoItem.setText(info)
-		self.tableWidget.setItem(int(number) - 1, 0, timeItem)
-		self.tableWidget.setItem(int(number) - 1, 1, sourceItem)
-		self.tableWidget.setItem(int(number) - 1, 2, destinationItem)
-		self.tableWidget.setItem(int(number) - 1, 3, protocolItem)
-		self.tableWidget.setItem(int(number) - 1, 4, infoItem)
-		pass
+		idItem.setText(str(header['ID']))
+		dateItem.setText(header['Date'])
+		timeItem.setText(header['Time'])
+		macSItem.setText(header['Mac Source'])
+		macDItem.setText(header['Mac Destination'])
+		versionItem.setText(header['Version'])
+		headerItem.setText(header['Header Length'])
+		ttlItem.setText(header['TTL'])
+		protocolItem.setText(header['Protocol'])
+		ipSItem.setText(header['IP Source'])
+		ipDItem.setText(header['IP Destination'])
+		# injectItem.setText('Click here to modify this packet with the ID: ' + str(header['ID']))
+		img = QtGui.QImage();
+		img.load('go_button_icon_logo.jpg');
+		injectItem.setData(QtCore.Qt.DecorationRole, QtGui.QPixmap.fromImage(img))
+
+
+		self.tableWidget.setItem(header['ID'] - 1, 0, idItem)
+		self.tableWidget.setItem(header['ID'] - 1, 1, dateItem)
+		self.tableWidget.setItem(header['ID'] - 1, 2, timeItem)
+		self.tableWidget.setItem(header['ID'] - 1, 3, macSItem)
+		self.tableWidget.setItem(header['ID'] - 1, 4, macDItem)
+		self.tableWidget.setItem(header['ID'] - 1, 5, versionItem)
+		self.tableWidget.setItem(header['ID'] - 1, 6, headerItem)
+		self.tableWidget.setItem(header['ID'] - 1, 7, ttlItem)
+		self.tableWidget.setItem(header['ID'] - 1, 8, protocolItem)
+		self.tableWidget.setItem(header['ID'] - 1, 9, ipSItem)
+		self.tableWidget.setItem(header['ID'] - 1, 10, ipDItem)
+		self.tableWidget.setItem(header['ID'] - 1, 11, injectItem)
+		return
 
 	# current/previous QTableWidgetItem
-	def affPacket(self, current, previous):
-		for i in range(self.packetNumber):
-			if current.text() == self.packetList[i][5]:
-				self.plainTextEdit.setPlainText(self.packetList[i][6])
-		pass
+	def affPacket(self, currentRow, currentColumn, previousRow, previousColumn):
+		if currentColumn == 10:
+			self.loadPacketToInjection(self.packetList[currentRow - 1])
+		else:
+			# self.plainTextEdit.setPlainText(str(self.packetList[currentRow - 1][1]))
+			text = str()
+			for k,v in self.packetList[currentRow][1].items():
+				text += k + ': ' + v + '\r\n'
+			self.plainTextEdit.setPlainText(text)
+		return
+
+	def loadPacketToInjection(self, packet):
+		return
 
 class MainWindow(QtGui.QMainWindow):
 	def __init__(self, parent=None):

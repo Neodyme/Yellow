@@ -47,7 +47,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="usesScrollButtons">
       <bool>false</bool>
@@ -66,29 +66,6 @@
        <string>Analyze Traffic</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="2" column="0">
-        <widget class="QPlainTextEdit" name="plainTextEdit">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-         <property name="overwriteMode">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Packet Content</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="0">
         <widget class="QTableWidget" name="tableWidget">
          <property name="autoFillBackground">
@@ -114,17 +91,42 @@
          </property>
          <column>
           <property name="text">
+           <string>ID</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Date</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
            <string>Time</string>
           </property>
          </column>
          <column>
           <property name="text">
-           <string>Source</string>
+           <string>Mac Source</string>
           </property>
          </column>
          <column>
           <property name="text">
-           <string>Destination</string>
+           <string>Mac Destination</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Version</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Header Length</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>TTL</string>
           </property>
          </column>
          <column>
@@ -134,9 +136,42 @@
          </column>
          <column>
           <property name="text">
-           <string>Info</string>
+           <string>IP Source</string>
           </property>
          </column>
+         <column>
+          <property name="text">
+           <string>IP Destination</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Injection</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QPlainTextEdit" name="plainTextEdit">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="overwriteMode">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Packet Content</string>
+         </property>
         </widget>
        </item>
       </layout>
