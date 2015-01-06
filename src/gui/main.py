@@ -113,18 +113,32 @@ class MainWindow(QtGui.QMainWindow):
 		# self.showMaximized()
 		self.setWindowTitle('WireShark Remake')
 
-		self.window = QtGui.QScrollArea()
+		self.window = QtGui.QWidget()
 		self.setCentralWidget(self.window)
 		self.window.showMaximized()
 
-		self.gui = Gui()
-		self.gui2 = Gui()
-		self.mainLayout = QtGui.QHBoxLayout()
+
+		self.tabProb = QtGui.QTabWidget(self.window)
+		self.tabProb.setTabPosition(QtGui.QTabWidget.West)
+
+		self.tabList = list()
+		self.createNewTab()
+		self.createNewTab()
+		self.createNewTab()
+		self.createNewTab()
+		self.createNewTab()
+		self.createNewTab()
+
+		self.mainLayout = QtGui.QVBoxLayout()
 		self.mainLayout.setMenuBar(self.menuBar)
-		self.mainLayout.addWidget(self.gui)
-		self.mainLayout.addWidget(self.gui2)
+		self.mainLayout.addWidget(self.tabProb)
 
 		self.window.setLayout(self.mainLayout)
+
+	def createNewTab(self):
+		self.tabList.append(Gui(self.tabProb))
+		self.tabProb.addTab(self.tabList[len(self.tabList) - 1], 'Prob' + str(len(self.tabList)))
+
 
 	def createMenu(self):
 		self.menuBar = QtGui.QMenuBar()
@@ -141,6 +155,7 @@ class MainWindow(QtGui.QMainWindow):
 
 def main(argv):
 	app = QtGui.QApplication(argv)
+
 	mwindow = MainWindow()
 
 	mwindow.show()
