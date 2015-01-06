@@ -17,6 +17,7 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		# currentCellChanged ( int currentRow, int currentColumn, int previousRow, int previousColumn )
 		# self.tableWidget.currentItemChanged.connect(self.affPacket)
 		self.tableWidget.currentCellChanged.connect(self.affPacket)
+		self.commandLinkButtonSendPacket.clicked.connect(self.sendPacket)
 
 	def init(self):
 		self.packetList = list()
@@ -112,8 +113,8 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 
 	# current/previous QTableWidgetItem
 	def affPacket(self, currentRow, currentColumn, previousRow, previousColumn):
-		if currentColumn == 10:
-			self.loadPacketToInjection(self.packetList[currentRow - 1])
+		if currentColumn == 11:
+			self.loadPacketToInjection(self.packetList[currentRow])
 		else:
 			# self.plainTextEdit.setPlainText(str(self.packetList[currentRow - 1][1]))
 			text = str()
@@ -122,7 +123,108 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 			self.plainTextEdit.setPlainText(text)
 		return
 
+	def enableTCP(self, check=True):
+		self.groupBoxTCPPart.setEnabled(check)
+		self.labelSourcePort.setEnabled(check)
+		self.labelDestinationPort.setEnabled(check)
+		self.labelSequence.setEnabled(check)
+		self.labelReconnaissance.setEnabled(check)
+		self.labelHeaderTCP.setEnabled(check)
+		self.lineEditSourcePort.setEnabled(check)
+		self.lineEditDestinationPort.setEnabled(check)
+		self.lineEditSequence.setEnabled(check)
+		self.lineEditReconnaissance.setEnabled(check)
+		self.lineEditHeaderTCP.setEnabled(check)
+		return
+
+	def enableUDP(self, check=True):
+		self.groupBoxUDPPart.setEnabled(check)
+		self.labelSourcePortUDP.setEnabled(check)
+		self.labelDestinationPortUDP.setEnabled(check)
+		self.labelSizeUDP.setEnabled(check)
+		self.labelChecksumUDP.setEnabled(check)
+		self.lineEditSourcePortUDP.setEnabled(check)
+		self.lineEditDestinationPortUDP.setEnabled(check)
+		self.lineEditSizeUDP.setEnabled(check)
+		self.lineEditChecksumUDP.setEnabled(check)
+		return
+
+	def loadTCP(self, packet):
+		self.lineEditSourcePort.setText(packet[1]['Source Port'])
+		self.lineEditDestinationPort.setText(packet[1]['Destination Port'])
+		self.lineEditSequence.setText(packet[1]['Sequence'])
+		self.lineEditReconnaissance.setText(packet[1]['Reconnaissance'])
+		self.lineEditHeaderTCP.setText(packet[1]['TCP Header'])
+		return
+
+	def loadUDP(self, packet):
+		self.lineEditSourcePortUDP.setText(packet[1]['Source Port'])
+		self.lineEditDestinationPortUDP.setText(packet[1]['Destination Port'])
+		self.lineEditSizeUDP.setText(packet[1]['Size'])
+		self.lineEditChecksumUDP.setText(packet[1]['Checksum'])
+		return
+
+	def loadHeader(self, packet):
+		self.lineEditDate.setText(packet[0]['Date'])
+		self.lineEditTime.setText(packet[0]['Time'])
+		self.lineEditDate.setText(packet[0]['Date'])
+		self.lineEditMacSource.setText(packet[0]['Mac Destination'])
+		self.lineEditMacDestination.setText(packet[0]['Mac Source'])
+		self.lineEditVersion.setText(packet[0]['Version'])
+		self.lineEditHeaderLength.setText(packet[0]['Header Length'])
+		self.lineEditTTL.setText(packet[0]['TTL'])
+		self.lineEditProtocol.setText(packet[0]['Protocol'])
+		self.lineEditIPSource.setText(packet[0]['IP Source'])
+		self.lineEditIPDestination.setText(packet[0]['IP Destination'])
+		return
+
 	def loadPacketToInjection(self, packet):
+		self.loadHeader(packet)
+		if packet[0]['Protocol'] == 'TCP':
+			self.enableTCP(True)
+			self.enableUDP(False)
+			self.loadTCP(packet)
+		else:
+			self.enableTCP(False)
+			self.enableUDP(True)
+			self.loadUDP(packet)
+
+		document = QtGui.QTextDocument(self.plainTextEditData)
+		document.setPlainText(packet[1]['Data'])
+		documentLayout = QtGui.QPlainTextDocumentLayout(document)
+		document.setDocumentLayout(documentLayout)
+		self.plainTextEditData.setDocument(document)
+		self.tabWidget.setCurrentIndex(1)
+		return
+
+	def sendPacket(self):
+		# self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		# self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		packet = [dict([('', '')]), dict([('', '')])]
+		packet[0]['Date'] = self.lineEditDate.text()
+		packet[0]['Time'] = self.lineEditTime.text()
+		packet[0]['Mac Destination'] = self.lineEditMacDestination.text()
+		packet[0]['Mac Source'] = self.lineEditMacSource.text()
+		packet[0]['Version'] = self.lineEditVersion.text()
+		packet[0]['Header Length'] = self.lineEditHeaderLength.text()
+		packet[0]['TTL'] = self.lineEditTTL.text()
+		packet[0]['Protocol'] = self.lineEditProtocol.text()
+		packet[0]['IP Source'] = self.lineEditIPSource.text()
+		packet[0]['IP Destination'] = self.lineEditIPDestination.text()
+		if self.groupBoxTCPPart.isEnabled():
+			packet[1]['Source Port'] = self.lineEditSourcePort.text()
+			packet[1]['Destination Port'] = self.lineEditDestinationPort.text()
+			packet[1]['Sequence'] = self.lineEditSequence.text()
+			packet[1]['Reconnaissance'] = self.lineEditReconnaissance.text()
+			packet[1]['Header TCP'] = self.lineEditHeaderTCP.text()
+		else:
+			packet[1]['Source Port'] = self.lineEditSourcePortUDP.text()
+			packet[1]['Destination Port'] = self.lineEditDestinationPortUDP.text()
+			packet[1]['Size'] = self.lineEditSizeUDP.text()
+			packet[1]['Checksum'] = self.lineEditChecksumUDP.text()
+		document = self.plainTextEditData.document()
+		packet[1]['Data'] = document.toPlainText()
+		# puis envoie sur la socket
 		return
 
 class MainWindow(QtGui.QMainWindow):
