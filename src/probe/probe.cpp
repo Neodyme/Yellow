@@ -5,12 +5,11 @@
 // Login   <pprost@epitech.net>
 // 
 // Started on  Tue Dec 23 12:37:52 2014 Prost P.
-// Last update Mon Jan  5 18:32:32 2015 Prost P.
+// Last update Tue Jan  6 19:17:29 2015 Prost P.
 //
 
 #include <iostream>
 
-#include <tins/tins.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -359,7 +358,7 @@ void *stage25(void *args)
     
   unsigned char *buffer = (unsigned char *) malloc(65536); //Its Big!
 
-  printf("%s\n", ((probe_args*)args)->log_file.c_str());
+  printf("Dumping log in: %s\n", ((probe_args*)args)->log_file.c_str());
   logfile = fopen(((probe_args*)args)->log_file.c_str(), "w");
 
   if(logfile==NULL)
@@ -378,7 +377,8 @@ void *stage25(void *args)
   strncpy((char *) ifr.ifr_name , ((probe_args*)args)->tapping_iface.c_str(), IFNAMSIZ);
   if((ioctl(sock_raw , SIOCGIFINDEX , & ifr )) == - 1)
     {
-      printf("Error getting Interface index ! \n"); exit( - 1);
+      printf("invalid interface: %s\n", ((probe_args*)args)->tapping_iface.c_str());
+      exit(-1);
     }
   
   /* Bind our raw socket to this interface */

@@ -5,14 +5,13 @@
 ** Login   <pprost@epitech.net>
 ** 
 ** Started on  Tue Dec 23 12:25:41 2014 Prost P.
-// Last update Sun Jan  4 10:54:09 2015 Prost P.
+// Last update Tue Jan  6 19:17:42 2015 Prost P.
 */
 
 #ifndef __YELLOW_HH_
 # define  __YELLOW_HH_
 
 #include <string>
-#include <tins/tins.h> 
 
 #define YELLOW_DEFAULT_PORT 1337
 
