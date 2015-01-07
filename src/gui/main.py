@@ -29,7 +29,7 @@ def name_proto(proto):
 
 
 class Gui(QtGui.QWidget, GUI.Ui_GUI):
-	def __init__(self, parent, ip, port):
+	def __init__(self, parent, ip='127.0.0.1', port=4242):
 		super(Gui, self).__init__(parent)
 		self.daemon = True
 		self.setupUi(self)
@@ -66,7 +66,7 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		self.s.Close()
 
 	def play(self):
-		self.s.send("start")
+		self.s.send('start')
 
 	def pause(self):
 		self.s.send('stop')
@@ -78,7 +78,7 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 	def init_Ui(self, ip, port):
 		# currentCellChanged ( int currentRow, int currentColumn, int previousRow, int previousColumn )
 		# self.tableWidget.currentItemChanged.connect(self.affPacket)
-		self.commandLinkButtonRunAnalyze.setText('Run Analyze on IP: ' + ip + ' with Port: ' + str(port))
+		self.commandLinkButtonRunAnalyze.setText('Run Analyze on IP: ' + ip + ':' + str(port))
 		self.tableWidget.currentCellChanged.connect(self.affPacket)
 		self.commandLinkButtonSendPacket.clicked.connect(self.sendPacket)
 		self.commandLinkButtonRunAnalyze.clicked.connect(self.play)
