@@ -97,16 +97,6 @@
             </property>
             <column>
              <property name="text">
-              <string>ID</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Date</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
               <string>Time</string>
              </property>
             </column>
@@ -326,104 +316,94 @@
                  <string>Header Part</string>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_5">
-                 <item row="8" column="0">
+                 <item row="7" column="0">
                   <widget class="QLabel" name="labelProtocol">
                    <property name="text">
                     <string>Protocol</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="1">
-                  <widget class="QLineEdit" name="lineEditDate"/>
-                 </item>
-                 <item row="9" column="0">
+                 <item row="8" column="0">
                   <widget class="QLabel" name="labelIPSource">
                    <property name="text">
                     <string>IP Source</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="9" column="1">
+                 <item row="8" column="1">
                   <widget class="QLineEdit" name="lineEditIPSource"/>
                  </item>
-                 <item row="7" column="1">
+                 <item row="6" column="1">
                   <widget class="QLineEdit" name="lineEditTTL"/>
                  </item>
-                 <item row="8" column="1">
+                 <item row="7" column="1">
                   <widget class="QLineEdit" name="lineEditProtocol"/>
                  </item>
-                 <item row="7" column="0">
+                 <item row="6" column="0">
                   <widget class="QLabel" name="labelTTL">
                    <property name="text">
                     <string>TTL</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="3" column="0">
+                 <item row="2" column="0">
                   <widget class="QLabel" name="labelMacDestination">
                    <property name="text">
                     <string>Mac Destination</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="6" column="0">
+                 <item row="5" column="0">
                   <widget class="QLabel" name="labelHeaderLength">
                    <property name="text">
                     <string>Header Length</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="6" column="1">
+                 <item row="5" column="1">
                   <widget class="QLineEdit" name="lineEditHeaderLength"/>
                  </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="labelDate">
-                   <property name="text">
-                    <string>Date</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
+                 <item row="1" column="0">
                   <widget class="QLabel" name="labelTime">
                    <property name="text">
                     <string>Time</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="4" column="0">
+                 <item row="3" column="0">
                   <widget class="QLabel" name="labelMacSource">
                    <property name="text">
                     <string>Mac Source</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="5" column="0">
+                 <item row="4" column="0">
                   <widget class="QLabel" name="labelVersion">
                    <property name="text">
                     <string>Version</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="1">
+                 <item row="1" column="1">
                   <widget class="QLineEdit" name="lineEditTime"/>
                  </item>
-                 <item row="3" column="1">
+                 <item row="2" column="1">
                   <widget class="QLineEdit" name="lineEditMacDestination"/>
                  </item>
-                 <item row="4" column="1">
+                 <item row="3" column="1">
                   <widget class="QLineEdit" name="lineEditMacSource"/>
                  </item>
-                 <item row="5" column="1">
+                 <item row="4" column="1">
                   <widget class="QLineEdit" name="lineEditVersion"/>
                  </item>
-                 <item row="10" column="0">
+                 <item row="9" column="0">
                   <widget class="QLabel" name="labelIPDestination">
                    <property name="text">
                     <string>IP Destination</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="10" column="1">
+                 <item row="9" column="1">
                   <widget class="QLineEdit" name="lineEditIPDestination"/>
                  </item>
                 </layout>
@@ -543,7 +523,6 @@
   <tabstop>lineEditDestinationPort</tabstop>
   <tabstop>lineEditReconnaissance</tabstop>
   <tabstop>lineEditHeaderTCP</tabstop>
-  <tabstop>lineEditDate</tabstop>
   <tabstop>lineEditIPSource</tabstop>
   <tabstop>lineEditTTL</tabstop>
   <tabstop>lineEditProtocol</tabstop>
