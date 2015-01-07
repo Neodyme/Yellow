@@ -33,7 +33,7 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		super(Gui, self).__init__(parent)
 		self.daemon = True
 		self.setupUi(self)
-		self.init_Ui()
+		self.init_Ui(ip, port)
 		self.init()
 		self.cancelled = False
 		try:
@@ -55,23 +55,35 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		
 		thread.start_new_thread(self.run, ())
 
+	def __exit__(self):
+		self.cancel()
+		self.close()
                 
 	def run(self):
-		self.s.send("start")
 		while not self.cancelled :
 			packet = self.s.recv(1500)
 			self.parse_packet(packet[16:])
 		self.s.Close()
 
+	def play(self):
+		self.s.send("start")
+
+	def pause(self):
+		self.s.send('stop')
+
 	def cancel(self):
 		"""End this timer thread"""
 		self.cancelled = True
                 
-	def init_Ui(self):
+	def init_Ui(self, ip, port):
 		# currentCellChanged ( int currentRow, int currentColumn, int previousRow, int previousColumn )
 		# self.tableWidget.currentItemChanged.connect(self.affPacket)
+		self.commandLinkButtonRunAnalyze.setText('Run Analyze on IP: ' + ip + ' with Port: ' + str(port))
 		self.tableWidget.currentCellChanged.connect(self.affPacket)
 		self.commandLinkButtonSendPacket.clicked.connect(self.sendPacket)
+		self.commandLinkButtonRunAnalyze.clicked.connect(self.play)
+		self.pushButtonInterrupt.clicked.connect(self.pause)
+		self.pushButtonDeleteProbe.clicked.connect(self.__exit__)
 
 	def init(self):
 		self.packetList = list()
@@ -147,6 +159,7 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 	# current/previous QTableWidgetItem
 	def affPacket(self, currentRow, currentColumn, previousRow, previousColumn):
 		if currentColumn == 11:
+			print('prout')
 			self.loadPacketToInjection(self.packetList[currentRow])
 		else:
 			# self.plainTextEdit.setPlainText(str(self.packetList[currentRow - 1][1]))
@@ -428,6 +441,8 @@ class MainWindow(QtGui.QMainWindow):
 
 		self.tabProb = QtGui.QTabWidget(self.window)
 		self.tabProb.setTabPosition(QtGui.QTabWidget.West)
+		self.tabProb.setTabsClosable(True)
+		self.tabProb.tabCloseRequested.connect(self.closeTab)
 
 		self.tabList = list()
 		# self.createNewTab()
@@ -443,6 +458,10 @@ class MainWindow(QtGui.QMainWindow):
 		self.mainLayout.addWidget(self.tabProb)
 
 		self.window.setLayout(self.mainLayout)
+
+	def closeTab(self, index):
+		self.tabList[index - 1].__exit__()
+		self.tabProb.removeTab(index)
 
 	def createNewTab(self):
 		ip = self.lineEditNewIPProb.text()
