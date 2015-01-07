@@ -78,7 +78,7 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 	def init_Ui(self, ip, port):
 		# currentCellChanged ( int currentRow, int currentColumn, int previousRow, int previousColumn )
 		# self.tableWidget.currentItemChanged.connect(self.affPacket)
-		self.commandLinkButtonRunAnalyze.setText('Run Analyze on IP: ' + ip + ':' + str(port))
+		self.commandLinkButtonRunAnalyze.setText('Run Analyze on IP: [' + ip + ':' + str(port)+']')
 		self.tableWidget.currentCellChanged.connect(self.affPacket)
 		self.commandLinkButtonSendPacket.clicked.connect(self.sendPacket)
 		self.commandLinkButtonRunAnalyze.clicked.connect(self.play)
