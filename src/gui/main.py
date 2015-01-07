@@ -46,19 +46,17 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 
 		try:
 			# self.s.connect(('127.0.0.1', 1337))
-			# self.s.connect(('195.154.71.44', 1337))
-			self.s.connect((ip, port))
+                        print("'{}' '{}' >>{}".format(ip, port, type(ip)))                        
+#                        self.s.connect(("195.154.71.44", 1337))
+                        self.s.connect((ip, 1337))
+
 		except socket.error:
 			print('Failed to connect socket')
-			# sys.exit()
-		print('Socket Connected')
-		
-		thread.start_new_thread(self.run, ())
 
 	def __exit__(self):
 		self.cancel()
 		self.close()
-                
+
 	def run(self):
 		while not self.cancelled :
 			packet = self.s.recv(1500)
@@ -66,7 +64,9 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		self.s.Close()
 
 	def play(self):
+                print("starting")
 		self.s.send("start")
+                thread.start_new_thread(self.run, ())
 
 	def pause(self):
 		self.s.send('stop')
