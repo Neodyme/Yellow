@@ -29,7 +29,7 @@ def name_proto(proto):
 
 
 class Gui(QtGui.QWidget, GUI.Ui_GUI):
-	def __init__(self, parent):
+	def __init__(self, parent, ip, port):
 		super(Gui, self).__init__(parent)
 		self.daemon = True
 		self.setupUi(self)
@@ -46,10 +46,11 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 
 		try:
 			# self.s.connect(('127.0.0.1', 1337))
-			self.s.connect(('195.154.71.44', 1337))
+			# self.s.connect(('195.154.71.44', 1337))
+			self.s.connect((ip, port))
 		except socket.error:
 			print('Failed to connect socket')
-			sys.exit()
+			# sys.exit()
 		print('Socket Connected')
 		
 		thread.start_new_thread(self.run, ())
@@ -392,12 +393,44 @@ class MainWindow(QtGui.QMainWindow):
 		self.setCentralWidget(self.window)
 		self.window.showMaximized()
 
+		self.connectNewProb = QtGui.QGroupBox(self.window)
+		self.connectNewProb.setTitle('New Probe Connection')
+		self.connectNewProb.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)#horizontal/vertical
+		self.hLayoutGroupBox = QtGui.QHBoxLayout()#self.connectNewProb
+
+		self.labelNewIPProb = QtGui.QLabel()
+		self.labelNewIPProb.setText('IP:')
+		self.labelNewIPProb.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+		self.lineEditNewIPProb = QtGui.QLineEdit(self.connectNewProb)
+		self.lineEditNewIPProb.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+		self.labelNewPortProb = QtGui.QLabel(self.connectNewProb)
+		self.labelNewPortProb.setText('Port:')
+		self.labelNewPortProb.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+		self.lineEditNewPortProb = QtGui.QLineEdit(self.connectNewProb)
+		self.lineEditNewPortProb.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+		
+		self.commandLinkButtonNewProb = QtGui.QCommandLinkButton()
+		self.commandLinkButtonNewProb.setText('Create New Connection')
+		self.commandLinkButtonNewProb.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+		self.commandLinkButtonNewProb.clicked.connect(self.createNewTab)
+		# 		self.tableWidget.currentCellChanged.connect(self.affPacket)
+
+
+		self.labelNewIPProbAdjust = QtGui.QLabel()
+
+		self.hLayoutGroupBox.addWidget(self.labelNewIPProb)
+		self.hLayoutGroupBox.addWidget(self.lineEditNewIPProb)
+		self.hLayoutGroupBox.addWidget(self.labelNewPortProb)
+		self.hLayoutGroupBox.addWidget(self.lineEditNewPortProb)
+		self.hLayoutGroupBox.addWidget(self.commandLinkButtonNewProb)
+		self.hLayoutGroupBox.addWidget(self.labelNewIPProbAdjust)
+		self.connectNewProb.setLayout(self.hLayoutGroupBox)
 
 		self.tabProb = QtGui.QTabWidget(self.window)
 		self.tabProb.setTabPosition(QtGui.QTabWidget.West)
 
 		self.tabList = list()
-		self.createNewTab()
+		# self.createNewTab()
 		# self.createNewTab()
 		# self.createNewTab()
 		# self.createNewTab()
@@ -406,14 +439,19 @@ class MainWindow(QtGui.QMainWindow):
 
 		self.mainLayout = QtGui.QVBoxLayout()
 		self.mainLayout.setMenuBar(self.menuBar)
+		self.mainLayout.addWidget(self.connectNewProb)
 		self.mainLayout.addWidget(self.tabProb)
 
 		self.window.setLayout(self.mainLayout)
 
 	def createNewTab(self):
-		g = Gui(self.tabProb)
+		ip = self.lineEditNewIPProb.text()
+		port = len(self.lineEditNewPortProb.text())
+		if self.lineEditNewPortProb.text() == '' or self.lineEditNewPortProb.text() == '':
+			return
+		g = Gui(self.tabProb, ip, port)
 		self.tabList.append(g)
-		self.tabProb.addTab(self.tabList[len(self.tabList) - 1], 'Prob' + str(len(self.tabList)))
+		self.tabProb.addTab(self.tabList[len(self.tabList) - 1], 'Probe' + str(len(self.tabList)))
 
 	def createMenu(self):
 		self.menuBar = QtGui.QMenuBar()
