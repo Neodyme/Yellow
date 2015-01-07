@@ -12,60 +12,59 @@ import thread
 
 
 def eth_addr (a):
-        b = "%.2x:%.2x:%.2x:%.2x:%.2x:%.2x" % (ord(a[0]) , ord(a[1]) , ord(a[2]), ord(a[3]), ord(a[4]) , ord(a[5]))
-        return b
+	b = "%.2x:%.2x:%.2x:%.2x:%.2x:%.2x" % (ord(a[0]) , ord(a[1]) , ord(a[2]), ord(a[3]), ord(a[4]) , ord(a[5]))
+	return b
 
 def name_proto(proto):
-        if proto == 1:
-                return "ICMP";
-        elif proto == 6:
-                return "TCP";
-        elif proto == 8:
-                return "HEADER";
-        elif proto == 17:
-                return "UDP";
-        else:
-                return proto;
+	if proto == 1:
+		return "ICMP";
+	elif proto == 6:
+		return "TCP";
+	elif proto == 8:
+		return "HEADER";
+	elif proto == 17:
+		return "UDP";
+	else:
+		return proto;
 
 
 class Gui(QtGui.QWidget, GUI.Ui_GUI):
 	def __init__(self, parent):
-                super(Gui, self).__init__(parent)
-                self.daemon = True
-
-                self.setupUi(self)
+		super(Gui, self).__init__(parent)
+		self.daemon = True
+		self.setupUi(self)
 		self.init_Ui()
 		self.init()
-                self.cancelled = False
-                try:
-                        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                except socket.error:
-                        print 'Failed to create socket'
-                        sys.exit()
+		self.cancelled = False
+		try:
+			self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		except socket.error:
+			print('Failed to create socket')
+			sys.exit()
 
-                print 'Socket Created'
+		print('Socket Created')
 
-                try:
-                        self.s.connect(('127.0.0.1', 1337))
-                except socket.error:
-                        print 'Failed to connect socket'
-                        sys.exit()
+		try:
+			# self.s.connect(('127.0.0.1', 1337))
+			self.s.connect(('195.154.71.44', 1337))
+		except socket.error:
+			print('Failed to connect socket')
+			sys.exit()
+		print('Socket Connected')
+		
+		thread.start_new_thread(self.run, ())
+
                 
-                print 'Socket Connected'
+	def run(self):
+		self.s.send("start")
+		while not self.cancelled :
+			packet = self.s.recv(1500)
+			self.parse_packet(packet[16:])
+		self.s.Close()
 
-                thread.start_new_thread(self.run, ())
-
-                
-        def run(self):
-                self.s.send("start")
-                while not self.cancelled :
-                        packet = self.s.recv(1500)
-                        self.parse_packet(packet[16:])
-                self.s.Close()
-
-        def cancel(self):
-                """End this timer thread"""
-                self.cancelled = True
+	def cancel(self):
+		"""End this timer thread"""
+		self.cancelled = True
                 
 	def init_Ui(self):
 		# currentCellChanged ( int currentRow, int currentColumn, int previousRow, int previousColumn )
@@ -76,22 +75,21 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 	def init(self):
 		self.packetList = list()
 		self.packetNumber = 0
-
 		# TEST
-#		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', 'ICIIIIIIIIIIIII'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '666'), ('Checksum', '666'), ('Data', 'DATA UQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZV')])])
+		#self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', 'ICIIIIIIIIIIIII'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '666'), ('Checksum', '666'), ('Data', 'DATA UQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZV')])])
 		# END OF TEST
 		pass
 
 	# refaire l'add avec les bonnes lists
 	def addReceivedPacket(self, packet):
-                try:
-                        self.packetNumber += 1
-                        packet[0]['ID'] = self.packetNumber
-                        self.packetList.append(packet)
-                        self.addPacketLine(packet[0])
-                except:
-                        print("pass")
-                        pass
+		try:
+			self.packetNumber += 1
+			packet[0]['ID'] = self.packetNumber
+			self.packetList.append(packet)
+			self.addPacketLine(packet[0])
+		except:
+			print("pass")
+			pass
 		# TEST
 		# "\r\n"
 		# TCP REF = [dict([('ID', 1), ('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])]
@@ -263,118 +261,120 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 
 
 
-        def parse_TCP(self, packet, iph_length, eth_length, l):
-                t = iph_length + eth_length
-                tcp_header = packet[t:t+20]
-             
-                TCPdict = {}
+	def parse_TCP(self, packet, iph_length, eth_length, l):
+		t = iph_length + eth_length
+		tcp_header = packet[t:t+20]
+
+		TCPdict = {}
+
+		tcph = struct.unpack('!HHLLBBHHH' , tcp_header)
+
+		source_port = tcph[0]
+		dest_port = tcph[1]
+		sequence = tcph[2]
+		acknowledgement = tcph[3]
+		doff_reserved = tcph[4]
+		tcph_length = doff_reserved >> 4
+
+		TCPdict = {'PORT src':str(source_port), 'PORT dest':str(dest_port), 'Sequence':str(sequence), 'Acknowledgement':str(acknowledgement), 'TCP header length':str(tcph_length)}
+		l.append(TCPdict)
+
+		h_size = eth_length + iph_length + tcph_length * 4
+		data_size = len(packet) - h_size
+
+		data = packet[h_size:]
+		TCPdict['DATA'] = data
+		l.append(TCPdict)
+		return
+
+	def parse_ICMP(self, packet, iph_length, eth_length, l):
+		u = iph_length + eth_length
+		icmph_length = 4
+		icmp_header = packet[u:u+4]
+
+		ICMPdict = {}
+
+		icmph = struct.unpack('!BBH' , icmp_header)
+
+		icmp_type = icmph[0]
+		code = icmph[1]
+		checksum = icmph[2]
+
+		ICMPdict = {'TYPE':str(icmp_type), 'Code':str(code), 'Checksum':str(checksum)}
+
+		h_size = eth_length + iph_length + icmph_length
+		data_size = len(packet) - h_size
+
+		data = packet[h_size:]
+		ICMPdict['DATA'] = data
+		l.append(ICMPdict)
+		return
                 
-                tcph = struct.unpack('!HHLLBBHHH' , tcp_header)
-             
-                source_port = tcph[0]
-                dest_port = tcph[1]
-                sequence = tcph[2]
-                acknowledgement = tcph[3]
-                doff_reserved = tcph[4]
-                tcph_length = doff_reserved >> 4
-        
-                TCPdict = {'PORT src':str(source_port), 'PORT dest':str(dest_port), 'Sequence':str(sequence), 'Acknowledgement':str(acknowledgement), 'TCP header length':str(tcph_length)}
-                l.append(TCPdict)
-		
-                h_size = eth_length + iph_length + tcph_length * 4
-                data_size = len(packet) - h_size
-             
-                data = packet[h_size:]
-                TCPdict['DATA'] = data
-                l.append(TCPdict)
+	def parse_UDP(self, packet, iph_length, eth_length, l):
+		u = iph_length + eth_length
+		udph_length = 8
+		udp_header = packet[u:u+8]
+		UDPdict = {}
 
-        def parse_ICMP(self, packet, iph_length, eth_length, l):
-                u = iph_length + eth_length
-                icmph_length = 4
-                icmp_header = packet[u:u+4]
-		
-                ICMPdict = {}
-        
-                icmph = struct.unpack('!BBH' , icmp_header)
-                
-                icmp_type = icmph[0]
-                code = icmph[1]
-                checksum = icmph[2]
-		
-                ICMPdict = {'TYPE':str(icmp_type), 'Code':str(code), 'Checksum':str(checksum)}
-		
-                h_size = eth_length + iph_length + icmph_length
-                data_size = len(packet) - h_size
-             
-                data = packet[h_size:]
-                ICMPdict['DATA'] = data
-                l.append(ICMPdict)
-                
-        def parse_UDP(self, packet, iph_length, eth_length, l):
-                u = iph_length + eth_length
-                udph_length = 8
-                udp_header = packet[u:u+8]
-		
-                UDPdict = {}
-			
-                udph = struct.unpack('!HHHH' , udp_header)
-             
-                source_port = udph[0]
-                dest_port = udph[1]
-                length = udph[2]
-                checksum = udph[3]
-	
-                UDPdict = {'PORT src':str(source_port), 'PORT dest':str(dest_port), 'Length':str(length), 'Checksum':str(checksum)}      
-             
-                h_size = eth_length + iph_length + udph_length
-                data_size = len(packet) - h_size
-             
-                data = packet[h_size:]
-                UDPdict['data'] = data
-                l.append(UDPdict)        
+		udph = struct.unpack('!HHHH' , udp_header)
 
-        def parse_packet(self, packet):
+		source_port = udph[0]
+		dest_port = udph[1]
+		length = udph[2]
+		checksum = udph[3]
+		UDPdict = {'PORT src':str(source_port), 'PORT dest':str(dest_port), 'Length':str(length), 'Checksum':str(checksum)}      
 
-                print(len(packet))
-                if(len(packet)) < 16:
-                        return
-                l = []
-                headerdict = {}
+		h_size = eth_length + iph_length + udph_length
+		data_size = len(packet) - h_size
 
-                eth_length = 14
-                eth_header = packet[:eth_length]
-                eth = struct.unpack('!6s6sH' , eth_header)
-                eth_protocol = socket.ntohs(eth[2])
-        
-                print 'proto - ' + str(eth_protocol)
-        
-                if eth_protocol == 8:
-                        print 'proto 8'
-                        ip_header = packet[eth_length:20+eth_length]
-                        iph = struct.unpack('!BBHHHBBH4s4s' , ip_header)
+		data = packet[h_size:]
+		UDPdict['data'] = data
+		l.append(UDPdict)
+		return
+
+	def parse_packet(self, packet):
+
+		print(len(packet))
+		if(len(packet)) < 16:
+			return
+		l = []
+		headerdict = {}
+
+		eth_length = 14
+		eth_header = packet[:eth_length]
+		eth = struct.unpack('!6s6sH' , eth_header)
+		eth_protocol = socket.ntohs(eth[2])
+
+		print('proto - ' + str(eth_protocol))
+
+		if eth_protocol == 8:
+			print('proto 8')
+			ip_header = packet[eth_length:20+eth_length]
+			iph = struct.unpack('!BBHHHBBH4s4s' , ip_header)
  
-                        version_ihl = iph[0]
-                        version = version_ihl >> 4
-                        ihl = version_ihl & 0xF
-                        iph_length = ihl * 4
-		
-                        ttl = iph[5]
-                        protocol = iph[6]
-                        s_addr = socket.inet_ntoa(iph[8]);
-                        d_addr = socket.inet_ntoa(iph[9]);
-				
-                        headerdict = {'Date':'date', 'Time':'time', 'Mac Destination':eth_addr(packet[0:6]), 'Mac Source':eth_addr(packet[6:12]), 'header protocol':name_proto(eth_protocol), 'Version':str(version), 'IPH':str(ihl), 'Length':str("24"), 'TTL':str(ttl), 'Protocol':name_proto(protocol), 'IP Source':str(s_addr), 'IP Destination':str(d_addr)}
-                        l.append(headerdict)
+			version_ihl = iph[0]
+			version = version_ihl >> 4
+			ihl = version_ihl & 0xF
+			iph_length = ihl * 4
 
-                        if protocol == 6: #Protocol = 6 (TCP)
-                                self.parse_TCP(packet, iph_length, eth_length, l)        
-                        elif protocol == 1: #Protocol = 1 (ICMP)
-                                self.parse_ICMP(packet, iph_length, eth_length, l)        
-                        elif protocol == 17: #Protocol = 1 (UDP)
-                                self.parse_UDP(packet, iph_length, eth_length, l)
+			ttl = iph[5]
+			protocol = iph[6]
+			s_addr = socket.inet_ntoa(iph[8]);
+			d_addr = socket.inet_ntoa(iph[9]);
 
-                print(l)
-                self.addReceivedPacket(l)
+			headerdict = {'Date':'date', 'Time':'time', 'Mac Destination':eth_addr(packet[0:6]), 'Mac Source':eth_addr(packet[6:12]), 'header protocol':name_proto(eth_protocol), 'Version':str(version), 'IPH':str(ihl), 'Length':str("24"), 'TTL':str(ttl), 'Protocol':name_proto(protocol), 'IP Source':str(s_addr), 'IP Destination':str(d_addr)}
+			l.append(headerdict)
+
+			if protocol == 6: #Protocol = 6 (TCP)
+				self.parse_TCP(packet, iph_length, eth_length, l)        
+			elif protocol == 1: #Protocol = 1 (ICMP)
+				self.parse_ICMP(packet, iph_length, eth_length, l)        
+			elif protocol == 17: #Protocol = 1 (UDP)
+				self.parse_UDP(packet, iph_length, eth_length, l)
+
+		print(l)
+		self.addReceivedPacket(l)
+		return
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -398,11 +398,11 @@ class MainWindow(QtGui.QMainWindow):
 
 		self.tabList = list()
 		self.createNewTab()
-		self.createNewTab()
-		self.createNewTab()
-		self.createNewTab()
-		self.createNewTab()
-		self.createNewTab()
+		# self.createNewTab()
+		# self.createNewTab()
+		# self.createNewTab()
+		# self.createNewTab()
+		# self.createNewTab()
 
 		self.mainLayout = QtGui.QVBoxLayout()
 		self.mainLayout.setMenuBar(self.menuBar)
@@ -411,7 +411,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.window.setLayout(self.mainLayout)
 
 	def createNewTab(self):
-                g = Gui(self.tabProb)
+		g = Gui(self.tabProb)
 		self.tabList.append(g)
 		self.tabProb.addTab(self.tabList[len(self.tabList) - 1], 'Prob' + str(len(self.tabList)))
 
