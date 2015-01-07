@@ -465,7 +465,7 @@ class MainWindow(QtGui.QMainWindow):
 
 	def createNewTab(self):
 		ip = self.lineEditNewIPProb.text()
-		port = len(self.lineEditNewPortProb.text())
+		port = int(self.lineEditNewPortProb.text())
 		if self.lineEditNewPortProb.text() == '' or self.lineEditNewPortProb.text() == '':
 			return
 		g = Gui(self.tabProb, ip, port)
