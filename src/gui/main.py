@@ -372,9 +372,9 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 			elif protocol == 17: #Protocol = 1 (UDP)
 				self.parse_UDP(packet, iph_length, eth_length, l)
 
-		print(l)
-		self.addReceivedPacket(l)
-		return
+                        print(l)
+                        self.addReceivedPacket(l)
+                return
 
 
 class MainWindow(QtGui.QMainWindow):
