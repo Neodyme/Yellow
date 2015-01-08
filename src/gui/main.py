@@ -9,99 +9,114 @@ import struct
 from threading import Thread
 import threading
 import thread
+import binascii
 
 
 def eth_addr (a):
-        b = "%.2x:%.2x:%.2x:%.2x:%.2x:%.2x" % (ord(a[0]) , ord(a[1]) , ord(a[2]), ord(a[3]), ord(a[4]) , ord(a[5]))
-        return b
+	b = "%.2x:%.2x:%.2x:%.2x:%.2x:%.2x" % (ord(a[0]) , ord(a[1]) , ord(a[2]), ord(a[3]), ord(a[4]) , ord(a[5]))
+	return b
 
 def name_proto(proto):
-        if proto == 1:
-                return "ICMP";
-        elif proto == 6:
-                return "TCP";
-        elif proto == 8:
-                return "HEADER";
-        elif proto == 17:
-                return "UDP";
-        else:
-                return proto;
+	if proto == 1:
+		return "ICMP";
+	elif proto == 6:
+		return "TCP";
+	elif proto == 8:
+		return "HEADER";
+	elif proto == 17:
+		return "UDP";
+	else:
+		return proto;
 
 
 class Gui(QtGui.QWidget, GUI.Ui_GUI):
-	def __init__(self, parent):
-                super(Gui, self).__init__(parent)
-                self.daemon = True
-
-                self.setupUi(self)
-		self.init_Ui()
+	def __init__(self, parent, ip='127.0.0.1', port=4242):
+		super(Gui, self).__init__(parent)
+		self.daemon = True
+		self.setupUi(self)
+		self.init_Ui(ip, port)
 		self.init()
-                self.cancelled = False
-                try:
-                        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                except socket.error:
-                        print 'Failed to create socket'
-                        sys.exit()
+		self.cancelled = False
+		try:
+			self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		except socket.error:
+			print('Failed to create socket')
+			sys.exit()
 
-                print 'Socket Created'
+		print('Socket Created')
 
-                try:
-                        self.s.connect(('127.0.0.1', 1337))
-                except socket.error:
-                        print 'Failed to connect socket'
-                        sys.exit()
+		try:
+			# self.s.connect(('127.0.0.1', 1337))
+			# self.s.connect(('195.154.71.44', 1337))
+			self.s.connect((ip, port))
+		except socket.error:
+			print('Failed to connect socket')
+			# sys.exit()
+		print('Socket Connected')
+		
+		thread.start_new_thread(self.run, ())
+
+	def __exit__(self):
+		self.cancel()
+		self.close()
                 
-                print 'Socket Connected'
+	def run(self):
+		while not self.cancelled :
+			packet = self.s.recv(1500)
+			self.parse_packet(packet[16:])
+		self.s.Close()
 
-                thread.start_new_thread(self.run, ())
+	def play(self):
+		self.s.send('start')
 
+	def pause(self):
+		self.s.send('stop')
+
+	def cancel(self):
+		"""End this timer thread"""
+		self.cancelled = True
                 
-        def run(self):
-                self.s.send("start")
-                while not self.cancelled :
-                        packet = self.s.recv(1500)
-                        self.parse_packet(packet[16:])
-                self.s.Close()
-
-        def cancel(self):
-                """End this timer thread"""
-                self.cancelled = True
-                
-	def init_Ui(self):
+	def init_Ui(self, ip, port):
 		# currentCellChanged ( int currentRow, int currentColumn, int previousRow, int previousColumn )
 		# self.tableWidget.currentItemChanged.connect(self.affPacket)
+		self.commandLinkButtonRunAnalyze.setText('Run Analyze on IP: [' + ip + ':' + str(port)+']')
 		self.tableWidget.currentCellChanged.connect(self.affPacket)
 		self.commandLinkButtonSendPacket.clicked.connect(self.sendPacket)
+		self.commandLinkButtonRunAnalyze.clicked.connect(self.play)
+		self.pushButtonInterrupt.clicked.connect(self.pause)
+		self.pushButtonDeleteProbe.clicked.connect(self.__exit__)
 
 	def init(self):
 		self.packetList = list()
 		self.packetNumber = 0
-
 		# TEST
-#		self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', 'ICIIIIIIIIIIIII'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '666'), ('Checksum', '666'), ('Data', 'DATA UQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:73'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '666'), ('Checksum', '666'), ('Data', 'DATA UQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:73'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '666'), ('Checksum', '666'), ('Data', 'DATA UQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:73'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '666'), ('Checksum', '666'), ('Data', 'DATA UQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('ID', 1), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
+		self.addReceivedPacket([dict([('ID', 2), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
 		# END OF TEST
 		pass
 
 	# refaire l'add avec les bonnes lists
 	def addReceivedPacket(self, packet):
-                try:
-                        self.packetNumber += 1
-                        packet[0]['ID'] = self.packetNumber
-                        self.packetList.append(packet)
-                        self.addPacketLine(packet[0])
-                except:
-                        print("pass")
-                        pass
+		try:
+			self.packetNumber += 1
+			packet[0]['ID'] = self.packetNumber
+			self.packetList.append(packet)
+			self.addPacketLine(packet[0])
+		except:
+			print("pass")
+			pass
 		# TEST
 		# "\r\n"
-		# TCP REF = [dict([('ID', 1), ('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])]
-		# UDP REF = [dict([('ID', 2), ('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])]
+		# TCP REF = [dict([('ID', 1), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])]
+		# UDP REF = [dict([('ID', 2), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])]
 		# END OF TEST
 		return
 
 	def addPacketLine(self, header):
 		idItem = QtGui.QTableWidgetItem()
-		dateItem = QtGui.QTableWidgetItem()
 		timeItem = QtGui.QTableWidgetItem()
 		macSItem = QtGui.QTableWidgetItem()
 		macDItem = QtGui.QTableWidgetItem()
@@ -114,46 +129,50 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		injectItem = QtGui.QTableWidgetItem()
 		self.tableWidget.insertRow(header['ID'] - 1)
 
-		idItem.setText(str(header['ID']))
-		dateItem.setText(header['Date'])
 		timeItem.setText(header['Time'])
 		macSItem.setText(header['Mac Source'])
 		macDItem.setText(header['Mac Destination'])
 		versionItem.setText(header['Version'])
-		headerItem.setText(header['Length'])
+		headerItem.setText(header['Header Length'])
 		ttlItem.setText(header['TTL'])
 		protocolItem.setText(header['Protocol'])
 		ipSItem.setText(header['IP Source'])
 		ipDItem.setText(header['IP Destination'])
-		# injectItem.setText('Click here to modify this packet with the ID: ' + str(header['ID']))
-		img = QtGui.QImage();
-		img.load('go_button_icon_logo.jpg');
-		injectItem.setData(QtCore.Qt.DecorationRole, QtGui.QPixmap.fromImage(img))
 
+		injectItem.setText('Click here to modify this packet with the ID: ' + str(header['ID']))
+		# img = QtGui.QImage();
+		# img.load('go_button_icon_logo.jpg');
+		# injectItem.setData(QtCore.Qt.DecorationRole, QtGui.QPixmap.fromImage(img))
 
-		self.tableWidget.setItem(header['ID'] - 1, 0, idItem)
-		self.tableWidget.setItem(header['ID'] - 1, 1, dateItem)
-		self.tableWidget.setItem(header['ID'] - 1, 2, timeItem)
-		self.tableWidget.setItem(header['ID'] - 1, 3, macSItem)
-		self.tableWidget.setItem(header['ID'] - 1, 4, macDItem)
-		self.tableWidget.setItem(header['ID'] - 1, 5, versionItem)
-		self.tableWidget.setItem(header['ID'] - 1, 6, headerItem)
-		self.tableWidget.setItem(header['ID'] - 1, 7, ttlItem)
-		self.tableWidget.setItem(header['ID'] - 1, 8, protocolItem)
-		self.tableWidget.setItem(header['ID'] - 1, 9, ipSItem)
-		self.tableWidget.setItem(header['ID'] - 1, 10, ipDItem)
-		self.tableWidget.setItem(header['ID'] - 1, 11, injectItem)
+		self.tableWidget.setItem(header['ID'] - 1, 0, timeItem)
+		self.tableWidget.setItem(header['ID'] - 1, 1, macSItem)
+		self.tableWidget.setItem(header['ID'] - 1, 2, macDItem)
+		self.tableWidget.setItem(header['ID'] - 1, 3, versionItem)
+		self.tableWidget.setItem(header['ID'] - 1, 4, headerItem)
+		self.tableWidget.setItem(header['ID'] - 1, 5, ttlItem)
+		self.tableWidget.setItem(header['ID'] - 1, 6, protocolItem)
+		self.tableWidget.setItem(header['ID'] - 1, 7, ipSItem)
+		self.tableWidget.setItem(header['ID'] - 1, 8, ipDItem)
+		self.tableWidget.setItem(header['ID'] - 1, 9, injectItem)
 		return
 
 	# current/previous QTableWidgetItem
 	def affPacket(self, currentRow, currentColumn, previousRow, previousColumn):
-		if currentColumn == 11:
+		if currentColumn == 9:
 			self.loadPacketToInjection(self.packetList[currentRow])
 		else:
-			# self.plainTextEdit.setPlainText(str(self.packetList[currentRow - 1][1]))
+			# self.plainTextEdit.setPlainText(str(self.packetList[currentRow - 1][1])) 195.154.71.44
 			text = str()
 			for k,v in self.packetList[currentRow][1].items():
-				text += k + ': ' + v + '\r\n'
+				if k == 'Data' or k == 'DATA' or k == 'data':
+					try:
+						# text += k + ':' + hex(int(v, 2)) + '\r\n'
+						text += k + ': ' + binascii.hexlify(v) + '\r\n'
+					except:
+						print('[ERROR] Data is not a binary code')
+						text += '[ERROR] Data is not a binary code. Simple show' + ': ' + v + ' \r\n'
+				else:
+					text += k + ': ' + v + ' \r\n'
 			self.plainTextEdit.setPlainText(text)
 		return
 
@@ -199,9 +218,7 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		return
 
 	def loadHeader(self, packet):
-		self.lineEditDate.setText(packet[0]['Date'])
 		self.lineEditTime.setText(packet[0]['Time'])
-		self.lineEditDate.setText(packet[0]['Date'])
 		self.lineEditMacSource.setText(packet[0]['Mac Destination'])
 		self.lineEditMacDestination.setText(packet[0]['Mac Source'])
 		self.lineEditVersion.setText(packet[0]['Version'])
@@ -224,7 +241,7 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 			self.loadUDP(packet)
 
 		document = QtGui.QTextDocument(self.plainTextEditData)
-		document.setPlainText(packet[1]['Data'])
+		document.setPlainText(hex(int(packet[1]['Data']), 2))
 		documentLayout = QtGui.QPlainTextDocumentLayout(document)
 		document.setDocumentLayout(documentLayout)
 		self.plainTextEditData.setDocument(document)
@@ -235,7 +252,6 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		# self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
 		# self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
 		packet = [dict([('', '')]), dict([('', '')])]
-		packet[0]['Date'] = self.lineEditDate.text()
 		packet[0]['Time'] = self.lineEditTime.text()
 		packet[0]['Mac Destination'] = self.lineEditMacDestination.text()
 		packet[0]['Mac Source'] = self.lineEditMacSource.text()
@@ -257,124 +273,126 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 			packet[1]['Size'] = self.lineEditSizeUDP.text()
 			packet[1]['Checksum'] = self.lineEditChecksumUDP.text()
 		document = self.plainTextEditData.document()
-		packet[1]['Data'] = document.toPlainText()
+		packet[1]['Data'] = binascii.unhexlify(document.toPlainText())
 		# puis envoie sur la socket
 		return
 
 
 
-        def parse_TCP(self, packet, iph_length, eth_length, l):
-                t = iph_length + eth_length
-                tcp_header = packet[t:t+20]
-             
-                TCPdict = {}
+	def parse_TCP(self, packet, iph_length, eth_length, l):
+		t = iph_length + eth_length
+		tcp_header = packet[t:t+20]
+
+		TCPdict = {}
+
+		tcph = struct.unpack('!HHLLBBHHH' , tcp_header)
+
+		source_port = tcph[0]
+		dest_port = tcph[1]
+		sequence = tcph[2]
+		acknowledgement = tcph[3]
+		doff_reserved = tcph[4]
+		tcph_length = doff_reserved >> 4
+
+		TCPdict = {'PORT src':str(source_port), 'PORT dest':str(dest_port), 'Sequence':str(sequence), 'Acknowledgement':str(acknowledgement), 'TCP header length':str(tcph_length)}
+		l.append(TCPdict)
+
+		h_size = eth_length + iph_length + tcph_length * 4
+		data_size = len(packet) - h_size
+
+		data = packet[h_size:]
+		TCPdict['DATA'] = data
+		l.append(TCPdict)
+		return
+
+	def parse_ICMP(self, packet, iph_length, eth_length, l):
+		u = iph_length + eth_length
+		icmph_length = 4
+		icmp_header = packet[u:u+4]
+
+		ICMPdict = {}
+
+		icmph = struct.unpack('!BBH' , icmp_header)
+
+		icmp_type = icmph[0]
+		code = icmph[1]
+		checksum = icmph[2]
+
+		ICMPdict = {'TYPE':str(icmp_type), 'Code':str(code), 'Checksum':str(checksum)}
+
+		h_size = eth_length + iph_length + icmph_length
+		data_size = len(packet) - h_size
+
+		data = packet[h_size:]
+		ICMPdict['DATA'] = data
+		l.append(ICMPdict)
+		return
                 
-                tcph = struct.unpack('!HHLLBBHHH' , tcp_header)
-             
-                source_port = tcph[0]
-                dest_port = tcph[1]
-                sequence = tcph[2]
-                acknowledgement = tcph[3]
-                doff_reserved = tcph[4]
-                tcph_length = doff_reserved >> 4
-        
-                TCPdict = {'PORT src':str(source_port), 'PORT dest':str(dest_port), 'Sequence':str(sequence), 'Acknowledgement':str(acknowledgement), 'TCP header length':str(tcph_length)}
-                l.append(TCPdict)
-		
-                h_size = eth_length + iph_length + tcph_length * 4
-                data_size = len(packet) - h_size
-             
-                data = packet[h_size:]
-                TCPdict['DATA'] = data
-                l.append(TCPdict)
+	def parse_UDP(self, packet, iph_length, eth_length, l):
+		u = iph_length + eth_length
+		udph_length = 8
+		udp_header = packet[u:u+8]
+		UDPdict = {}
 
-        def parse_ICMP(self, packet, iph_length, eth_length, l):
-                u = iph_length + eth_length
-                icmph_length = 4
-                icmp_header = packet[u:u+4]
-		
-                ICMPdict = {}
-        
-                icmph = struct.unpack('!BBH' , icmp_header)
-                
-                icmp_type = icmph[0]
-                code = icmph[1]
-                checksum = icmph[2]
-		
-                ICMPdict = {'TYPE':str(icmp_type), 'Code':str(code), 'Checksum':str(checksum)}
-		
-                h_size = eth_length + iph_length + icmph_length
-                data_size = len(packet) - h_size
-             
-                data = packet[h_size:]
-                ICMPdict['DATA'] = data
-                l.append(ICMPdict)
-                
-        def parse_UDP(self, packet, iph_length, eth_length, l):
-                u = iph_length + eth_length
-                udph_length = 8
-                udp_header = packet[u:u+8]
-		
-                UDPdict = {}
-			
-                udph = struct.unpack('!HHHH' , udp_header)
-             
-                source_port = udph[0]
-                dest_port = udph[1]
-                length = udph[2]
-                checksum = udph[3]
-	
-                UDPdict = {'PORT src':str(source_port), 'PORT dest':str(dest_port), 'Length':str(length), 'Checksum':str(checksum)}      
-             
-                h_size = eth_length + iph_length + udph_length
-                data_size = len(packet) - h_size
-             
-                data = packet[h_size:]
-                UDPdict['data'] = data
-                l.append(UDPdict)        
+		udph = struct.unpack('!HHHH' , udp_header)
 
-        def parse_packet(self, packet):
+		source_port = udph[0]
+		dest_port = udph[1]
+		length = udph[2]
+		checksum = udph[3]
+		UDPdict = {'PORT src':str(source_port), 'PORT dest':str(dest_port), 'Header Length':str(length), 'Checksum':str(checksum)}      
 
-                print(len(packet))
-                if(len(packet)) < 16:
-                        return
-                l = []
-                headerdict = {}
+		h_size = eth_length + iph_length + udph_length
+		data_size = len(packet) - h_size
 
-                eth_length = 14
-                eth_header = packet[:eth_length]
-                eth = struct.unpack('!6s6sH' , eth_header)
-                eth_protocol = socket.ntohs(eth[2])
-        
-                print 'proto - ' + str(eth_protocol)
-        
-                if eth_protocol == 8:
-                        print 'proto 8'
-                        ip_header = packet[eth_length:20+eth_length]
-                        iph = struct.unpack('!BBHHHBBH4s4s' , ip_header)
+		data = packet[h_size:]
+		UDPdict['data'] = data
+		l.append(UDPdict)
+		return
+
+	def parse_packet(self, packet):
+
+		print(len(packet))
+		if(len(packet)) < 16:
+			return
+		l = []
+		headerdict = {}
+
+		eth_length = 14
+		eth_header = packet[:eth_length]
+		eth = struct.unpack('!6s6sH' , eth_header)
+		eth_protocol = socket.ntohs(eth[2])
+
+		print('proto - ' + str(eth_protocol))
+
+		if eth_protocol == 8:
+			print('proto 8')
+			ip_header = packet[eth_length:20+eth_length]
+			iph = struct.unpack('!BBHHHBBH4s4s' , ip_header)
  
-                        version_ihl = iph[0]
-                        version = version_ihl >> 4
-                        ihl = version_ihl & 0xF
-                        iph_length = ihl * 4
-		
-                        ttl = iph[5]
-                        protocol = iph[6]
-                        s_addr = socket.inet_ntoa(iph[8]);
-                        d_addr = socket.inet_ntoa(iph[9]);
-				
-                        headerdict = {'Date':'date', 'Time':'time', 'Mac Destination':eth_addr(packet[0:6]), 'Mac Source':eth_addr(packet[6:12]), 'header protocol':name_proto(eth_protocol), 'Version':str(version), 'IPH':str(ihl), 'Length':str("24"), 'TTL':str(ttl), 'Protocol':name_proto(protocol), 'IP Source':str(s_addr), 'IP Destination':str(d_addr)}
-                        l.append(headerdict)
+			version_ihl = iph[0]
+			version = version_ihl >> 4
+			ihl = version_ihl & 0xF
+			iph_length = ihl * 4
 
-                        if protocol == 6: #Protocol = 6 (TCP)
-                                self.parse_TCP(packet, iph_length, eth_length, l)        
-                        elif protocol == 1: #Protocol = 1 (ICMP)
-                                self.parse_ICMP(packet, iph_length, eth_length, l)        
-                        elif protocol == 17: #Protocol = 1 (UDP)
-                                self.parse_UDP(packet, iph_length, eth_length, l)
+			ttl = iph[5]
+			protocol = iph[6]
+			s_addr = socket.inet_ntoa(iph[8]);
+			d_addr = socket.inet_ntoa(iph[9]);
 
-                print(l)
-                self.addReceivedPacket(l)
+			headerdict = {'Time':'time', 'Mac Destination':eth_addr(packet[0:6]), 'Mac Source':eth_addr(packet[6:12]), 'header protocol':str(name_proto(eth_protocol)), 'Version':str(version), 'IPH':str(ihl), 'Header Length':str("24"), 'TTL':str(ttl), 'Protocol':str(name_proto(protocol)), 'IP Source':str(s_addr), 'IP Destination':str(d_addr)}
+			l.append(headerdict)
+
+			if protocol == 6: #Protocol = 6 (TCP)
+				self.parse_TCP(packet, iph_length, eth_length, l)        
+			elif protocol == 1: #Protocol = 1 (ICMP)
+				self.parse_ICMP(packet, iph_length, eth_length, l)        
+			elif protocol == 17: #Protocol = 1 (UDP)
+				self.parse_UDP(packet, iph_length, eth_length, l)
+
+                        print(l)
+                        self.addReceivedPacket(l)
+                return
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -392,28 +410,71 @@ class MainWindow(QtGui.QMainWindow):
 		self.setCentralWidget(self.window)
 		self.window.showMaximized()
 
+		self.connectNewProb = QtGui.QGroupBox(self.window)
+		self.connectNewProb.setTitle('New Probe Connection')
+		self.connectNewProb.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)#horizontal/vertical
+		self.hLayoutGroupBox = QtGui.QHBoxLayout()#self.connectNewProb
+
+		self.labelNewIPProb = QtGui.QLabel()
+		self.labelNewIPProb.setText('IP:')
+		self.labelNewIPProb.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+		self.lineEditNewIPProb = QtGui.QLineEdit(self.connectNewProb)
+		self.lineEditNewIPProb.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+		self.labelNewPortProb = QtGui.QLabel(self.connectNewProb)
+		self.labelNewPortProb.setText('Port:')
+		self.labelNewPortProb.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+		self.lineEditNewPortProb = QtGui.QLineEdit(self.connectNewProb)
+		self.lineEditNewPortProb.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+		
+		self.commandLinkButtonNewProb = QtGui.QCommandLinkButton()
+		self.commandLinkButtonNewProb.setText('Create New Connection')
+		self.commandLinkButtonNewProb.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+		self.commandLinkButtonNewProb.clicked.connect(self.createNewTab)
+		# 		self.tableWidget.currentCellChanged.connect(self.affPacket)
+
+
+		self.labelNewIPProbAdjust = QtGui.QLabel()
+
+		self.hLayoutGroupBox.addWidget(self.labelNewIPProb)
+		self.hLayoutGroupBox.addWidget(self.lineEditNewIPProb)
+		self.hLayoutGroupBox.addWidget(self.labelNewPortProb)
+		self.hLayoutGroupBox.addWidget(self.lineEditNewPortProb)
+		self.hLayoutGroupBox.addWidget(self.commandLinkButtonNewProb)
+		self.hLayoutGroupBox.addWidget(self.labelNewIPProbAdjust)
+		self.connectNewProb.setLayout(self.hLayoutGroupBox)
 
 		self.tabProb = QtGui.QTabWidget(self.window)
 		self.tabProb.setTabPosition(QtGui.QTabWidget.West)
+		self.tabProb.setTabsClosable(True)
+		self.tabProb.tabCloseRequested.connect(self.closeTab)
 
 		self.tabList = list()
-		self.createNewTab()
-		self.createNewTab()
-		self.createNewTab()
-		self.createNewTab()
-		self.createNewTab()
-		self.createNewTab()
+		# self.createNewTab()
+		# self.createNewTab()
+		# self.createNewTab()
+		# self.createNewTab()
+		# self.createNewTab()
+		# self.createNewTab()
 
 		self.mainLayout = QtGui.QVBoxLayout()
 		self.mainLayout.setMenuBar(self.menuBar)
+		self.mainLayout.addWidget(self.connectNewProb)
 		self.mainLayout.addWidget(self.tabProb)
 
 		self.window.setLayout(self.mainLayout)
 
+	def closeTab(self, index):
+		self.tabList[index - 1].__exit__()
+		self.tabProb.removeTab(index)
+
 	def createNewTab(self):
-                g = Gui(self.tabProb)
+		ip = self.lineEditNewIPProb.text()
+		port = int(self.lineEditNewPortProb.text())
+		if self.lineEditNewPortProb.text() == '' or self.lineEditNewPortProb.text() == '':
+			return
+		g = Gui(self.tabProb, ip, port)
 		self.tabList.append(g)
-		self.tabProb.addTab(self.tabList[len(self.tabList) - 1], 'Prob' + str(len(self.tabList)))
+		self.tabProb.addTab(self.tabList[len(self.tabList) - 1], 'Probe' + str(len(self.tabList)))
 
 	def createMenu(self):
 		self.menuBar = QtGui.QMenuBar()
