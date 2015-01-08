@@ -5,7 +5,7 @@
 // Login   <pprost@epitech.net>
 // 
 // Started on  Tue Dec 23 12:37:52 2014 Prost P.
-// Last update Thu Jan  8 11:23:43 2015 Prost P.
+// Last update Thu Jan  8 11:50:49 2015 Prost P.
 //
 
 #include <iostream>
@@ -459,26 +459,50 @@ void *stage25(void *args)
 void	inject(char *buffer, int len, probe_args *args)
 {
   struct ethhdr *eth = (struct ethhdr *)(buffer + 6);
-  struct sockaddr_ll socket_address;
-  struct ifreq if_idx;
 
-  memset(&if_idx, 0, sizeof(struct ifreq));
-  
+  int sock;
+    /* Open RAW socket to send on */
+    if ((sock = socket(AF_PACKET, SOCK_RAW, IPPROTO_RAW)) == -1) {
+      perror("socket");
+    }
+    
+    struct ifreq if_idx;
+
+    memset(&if_idx, 0, sizeof(struct ifreq));
+    strncpy(if_idx.ifr_name, args->tapping_iface.c_str(), IFNAMSIZ);
+    if (ioctl(sock, SIOCGIFINDEX, &if_idx) < 0)
+      perror("SIOCGIFINDEX");
+
+    struct ifreq if_mac;
+    memset(&if_mac, 0, sizeof(struct ifreq));
+    strncpy(if_mac.ifr_name, args->tapping_iface.c_str(), IFNAMSIZ);
+    if (ioctl(sock, SIOCGIFHWADDR, &if_mac) < 0)
+      perror("SIOCGIFHWADDR");
+    
+    struct ifreq if_ip;
+
+    memset(&if_ip, 0, sizeof(struct ifreq));
+    strncpy(if_ip.ifr_name, args->tapping_iface.c_str(), IFNAMSIZ);
+    if (ioctl(sock, SIOCGIFADDR, &if_ip) < 0)
+      perror("SIOCGIFADDR");
+
+    /* Destination address */
+    struct sockaddr_ll socket_address;
+
     /* Index of the network device */
-  memcpy(socket_address.sll_addr, eth->h_dest, 6);
-  /* Send packet */
-  strncpy(if_idx.ifr_name, args->tapping_iface.c_str(), args->tapping_iface.length() - 1);
-  if (ioctl(args->sock_raw, SIOCGIFINDEX, &if_idx) < 0)
-    perror("SIOCGIFINDEX");
-  
-  if (sendto(args->sock_raw, buffer, len, 0, (struct sockaddr*)&socket_address, sizeof(struct sockaddr_ll)) < 0)
-    perror("send");
-  printf("   |-Destination Address : %.2X-%.2X-%.2X-%.2X-%.2X-%.2X \n",
-	 eth->h_dest[0] , eth->h_dest[1] , eth->h_dest[2] , eth->h_dest[3] , eth->h_dest[4] , eth->h_dest[5] );
+    socket_address.sll_ifindex = if_idx.ifr_ifindex;
+    /* Address length*/
+    socket_address.sll_halen = ETH_ALEN;
+    
+    if (sendto(sock, buffer, len, 0, (struct sockaddr*)&socket_address, sizeof(struct sockaddr_ll)) < 0)
+      printf("Send failed\n");
+    
+    printf("   |-Destination Address : %.2X-%.2X-%.2X-%.2X-%.2X-%.2X \n",
+	   eth->h_dest[0] , eth->h_dest[1] , eth->h_dest[2] , eth->h_dest[3] , eth->h_dest[4] , eth->h_dest[5] );
 
+    std::cout << "Sending " << len << "bytes" << std::endl;  
+    close(sock);
 
-  
-  std::cout << "Sending " << len << "bytes" << std::endl;  
 }
 	    
 int	stage1(probe_args &args)
