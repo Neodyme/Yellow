@@ -441,8 +441,13 @@ void *stage25(void *args)
     }
   close(sock_raw);
   printf("Stopping...");
+
+  free(buffer);
+
   ((probe_args*)args)->quit = 0;
   pthread_exit(NULL);
+
+
   return NULL; 
 }
 
@@ -495,11 +500,10 @@ int	stage1(probe_args &args)
 	    {
 	      pthread_create(&thread, NULL, stage25, &args);
 	    }
-	    if (strncasecmp(buffer, "STOP", 5) == 0)
+	    if (strncasecmp(buffer, "STOP", 4) == 0)
 	    {
 	      args.quit = 1;
 	      std::cout << "stoping" << std::endl;
-	      break;
 	    }
 	}
     }
