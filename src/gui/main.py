@@ -90,6 +90,7 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 	def init(self):
 		self.packetList = list()
 		self.packetNumber = 0
+		self.tabRow = 0
 		# TEST
 		# END OF TEST
 		pass
@@ -122,7 +123,7 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		ipSItem = QtGui.QTableWidgetItem()
 		ipDItem = QtGui.QTableWidgetItem()
 		injectItem = QtGui.QTableWidgetItem()
-		self.tableWidget.insertRow(header['ID'] - 1)
+		self.tableWidget.insertRow(self.tabRow)#header['ID'] - 1
 
 		timeItem.setText(header['Time'])
 		macSItem.setText(header['Mac Source'])
@@ -139,16 +140,17 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		# img.load('go_button_icon_logo.jpg');
 		# injectItem.setData(QtCore.Qt.DecorationRole, QtGui.QPixmap.fromImage(img))
 
-		self.tableWidget.setItem(header['ID'] - 1, 0, timeItem)
-		self.tableWidget.setItem(header['ID'] - 1, 1, macSItem)
-		self.tableWidget.setItem(header['ID'] - 1, 2, macDItem)
-		self.tableWidget.setItem(header['ID'] - 1, 3, versionItem)
-		self.tableWidget.setItem(header['ID'] - 1, 4, headerItem)
-		self.tableWidget.setItem(header['ID'] - 1, 5, ttlItem)
-		self.tableWidget.setItem(header['ID'] - 1, 6, protocolItem)
-		self.tableWidget.setItem(header['ID'] - 1, 7, ipSItem)
-		self.tableWidget.setItem(header['ID'] - 1, 8, ipDItem)
-		self.tableWidget.setItem(header['ID'] - 1, 9, injectItem)
+		self.tableWidget.setItem(self.tabRow, 0, timeItem)
+		self.tableWidget.setItem(self.tabRow, 1, macSItem)
+		self.tableWidget.setItem(self.tabRow, 2, macDItem)
+		self.tableWidget.setItem(self.tabRow, 3, versionItem)
+		self.tableWidget.setItem(self.tabRow, 4, headerItem)
+		self.tableWidget.setItem(self.tabRow, 5, ttlItem)
+		self.tableWidget.setItem(self.tabRow, 6, protocolItem)
+		self.tableWidget.setItem(self.tabRow, 7, ipSItem)
+		self.tableWidget.setItem(self.tabRow, 8, ipDItem)
+		self.tableWidget.setItem(self.tabRow, 9, injectItem)
+		self.tabRow += 1
 		return
 
 	# current/previous QTableWidgetItem
@@ -269,31 +271,30 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 
 		p.data.ttl = packet[0]['TTL']
  
-                p.data.src=socket.inet_aton(packet[0]['IP Source'])
-                p.data.dst=socket.inet_aton(packet[0]['IP Destination'] )
+		p.data.src=socket.inet_aton(packet[0]['IP Source'])
+		p.data.dst=socket.inet_aton(packet[0]['IP Destination'] )
 
-                
-                if self.groupBoxTCPPart.isEnabled():
-                        payload = TCP()
-                        packet[1]['Source Port'] = int(self.lineEditSourcePort.text())
-                        payload.seq = int(self.lineEditSequence.text())
-                        packet[1]['Destination Port'] = int(self.lineEditDestinationPort.text())
-                        packet[1]['Sequence'] = self.lineEditSequence.text()
-                        packet[1]['Reconnaissance'] = self.lineEditReconnaissance.text()
-                        packet[1]['Header TCP'] = self.lineEditHeaderTCP.text()
-                elif self.groupBoxUDPPart.isEnabled():
-                        payload = UDP()
-                        packet[1]['Source Port'] = int(self.lineEditSourcePortUDP.text())
-                        packet[1]['Destination Port'] = int(self.lineEditDestinationPortUDP.text())
-                        packet[1]['Header Length'] = int(self.lineEditSizeUDP.text())
-                        packet[1]['Checksum'] = self.lineEditChecksumUDP.text()
-                document = self.plainTextEditData.document()
-                payload.data = document.toPlainText()
-                payload.dport = packet[1]['Source Port']
-                payload.sport = packet[1]['Destination Port']
+		if self.groupBoxTCPPart.isEnabled():
+			payload = TCP()
+			packet[1]['Source Port'] = int(self.lineEditSourcePort.text())
+			payload.seq = int(self.lineEditSequence.text())
+			packet[1]['Destination Port'] = int(self.lineEditDestinationPort.text())
+			packet[1]['Sequence'] = self.lineEditSequence.text()
+			packet[1]['Reconnaissance'] = self.lineEditReconnaissance.text()
+			packet[1]['Header TCP'] = self.lineEditHeaderTCP.text()
+		elif self.groupBoxUDPPart.isEnabled():
+			payload = UDP()
+			packet[1]['Source Port'] = int(self.lineEditSourcePortUDP.text())
+			packet[1]['Destination Port'] = int(self.lineEditDestinationPortUDP.text())
+			packet[1]['Header Length'] = int(self.lineEditSizeUDP.text())
+			packet[1]['Checksum'] = hex(self.lineEditChecksumUDP.text())
+		document = self.plainTextEditData.document()
+		payload.data = binascii.unhexlify(document.toPlainText())
+		payload.dport = packet[1]['Source Port']
+		payload.sport = packet[1]['Destination Port']
 
-                p.data.data = payload
-                       
+
+# 		except:
 #                        print("error")
 #                        pass
 		self.s.send("INJECT"+str(p))
