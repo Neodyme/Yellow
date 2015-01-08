@@ -99,7 +99,12 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 			self.packetNumber += 1
 			packet[0]['ID'] = self.packetNumber
 			self.packetList.append(packet)
-			self.addPacketLine(packet[0])
+			if self.comboBoxFilter.currentText() == 'All':
+				self.addPacketLine(packet[0])
+			elif self.comboBoxFilter.currentText() == 'TCP' and packet[0]['Protocol'] == 'TCP':
+				self.addPacketLine(packet[0])
+			elif self.comboBoxFilter.currentText() == 'UDP' and packet[0]['Protocol'] == 'UDP':
+				self.addPacketLine(packet[0])
 		except:
 			print("pass")
 			pass

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'GUI.ui'
 #
-# Created: Wed Jan  7 18:42:32 2015
+# Created: Thu Jan  8 11:54:46 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -273,6 +273,12 @@ class Ui_GUI(object):
         self.commandLinkButtonRunAnalyze = QtGui.QCommandLinkButton(self.groupBoxCommands)
         self.commandLinkButtonRunAnalyze.setObjectName("commandLinkButtonRunAnalyze")
         self.gridLayout_10.addWidget(self.commandLinkButtonRunAnalyze, 0, 0, 1, 1)
+        self.comboBoxFilter = QtGui.QComboBox(self.groupBoxCommands)
+        self.comboBoxFilter.setObjectName("comboBoxFilter")
+        self.comboBoxFilter.addItem("")
+        self.comboBoxFilter.addItem("")
+        self.comboBoxFilter.addItem("")
+        self.gridLayout_10.addWidget(self.comboBoxFilter, 0, 3, 1, 1)
         self.gridLayout_2.addWidget(self.groupBoxCommands, 0, 0, 1, 1)
 
         self.retranslateUi(GUI)
@@ -349,4 +355,7 @@ class Ui_GUI(object):
         self.pushButtonInterrupt.setText(QtGui.QApplication.translate("GUI", "Interrupt", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButtonDeleteProbe.setText(QtGui.QApplication.translate("GUI", "Delete this Probe Connection", None, QtGui.QApplication.UnicodeUTF8))
         self.commandLinkButtonRunAnalyze.setText(QtGui.QApplication.translate("GUI", "Run Analyze", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBoxFilter.setItemText(0, QtGui.QApplication.translate("GUI", "All", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBoxFilter.setItemText(1, QtGui.QApplication.translate("GUI", "TCP", None, QtGui.QApplication.UnicodeUTF8))
+        self.comboBoxFilter.setItemText(2, QtGui.QApplication.translate("GUI", "UDP", None, QtGui.QApplication.UnicodeUTF8))
 
