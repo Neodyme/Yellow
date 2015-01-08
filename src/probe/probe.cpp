@@ -5,7 +5,7 @@
 // Login   <pprost@epitech.net>
 // 
 // Started on  Tue Dec 23 12:37:52 2014 Prost P.
-// Last update Tue Jan  6 19:17:29 2015 Prost P.
+// Last update Thu Jan  8 05:34:08 2015 Prost P.
 //
 
 #include <iostream>
@@ -370,7 +370,8 @@ void *stage25(void *args)
   timestamp = clock();
   
   int sock_raw = socket( AF_PACKET , SOCK_RAW , htons(ETH_P_ALL)) ;
-
+  ((probe_args*)args)->sock_raw = sock_raw;
+  
   bzero(&ifr , sizeof(struct ifreq ));
   /* First Get the Interface Index */
 
@@ -452,12 +453,19 @@ void *stage25(void *args)
 }
 
 
+void	inject(char *buffer, int len, probe_args *args)
+{
+  std::cout << "Sending " << len << "bytes" << std::endl;  
+  send(args->sock_raw, buffer, len, 0);
+  perror("send");
+}
+	    
 int	stage1(probe_args &args)
 {
   pthread_t thread;
   int sockfd, newsockfd, portno;
   socklen_t clilen;
-  char buffer[256];
+  char buffer[2560];
   struct sockaddr_in serv_addr, cli_addr;
   int n;
 
@@ -491,9 +499,9 @@ int	stage1(probe_args &args)
       
       if (args.sockfd < 0)
 	errx(-1, "ERROR on accept");
-      bzero(buffer,256);
+      bzero(buffer,2560);
 
-      while ((n = read(args.sockfd, buffer, 255)))
+      while ((n = read(args.sockfd, buffer, 2550)))
 	{
 	  std::cout << buffer << std::endl;
 	  if (strncasecmp(buffer, "START", 5) == 0)
@@ -505,6 +513,11 @@ int	stage1(probe_args &args)
 	      args.quit = 1;
 	      std::cout << "stoping" << std::endl;
 	    }
+	    if (strncasecmp(buffer, "INJECT", 6) == 0)
+	    {
+	      inject(buffer + 6, n - 6,  &args);
+	    }
+
 	}
     }
   std::cout << "exit stage 1" << std::endl;
