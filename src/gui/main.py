@@ -284,13 +284,14 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
                         packet[1]['Source Port'] = int(self.lineEditSourcePortUDP.text())
                         packet[1]['Destination Port'] = int(self.lineEditDestinationPortUDP.text())
                         packet[1]['Header Length'] = int(self.lineEditSizeUDP.text())
-                        packet[1]['Checksum'] = hex(self.lineEditChecksumUDP.text())
+                        packet[1]['Checksum'] = self.lineEditChecksumUDP.text()
                 document = self.plainTextEditData.document()
                 payload.data = document.toPlainText()
                 payload.dport = packet[1]['Source Port']
                 payload.sport = packet[1]['Destination Port']
-                        
-                        
+
+                p.data.data = payload
+                       
 #                except:
 #                        print("error")
 #                        pass
