@@ -5,7 +5,7 @@
 // Login   <pprost@epitech.net>
 // 
 // Started on  Tue Dec 23 12:37:52 2014 Prost P.
-// Last update Thu Jan  8 05:34:08 2015 Prost P.
+// Last update Thu Jan  8 11:23:43 2015 Prost P.
 //
 
 #include <iostream>
@@ -370,13 +370,16 @@ void *stage25(void *args)
   timestamp = clock();
   
   int sock_raw = socket( AF_PACKET , SOCK_RAW , htons(ETH_P_ALL)) ;
+
   ((probe_args*)args)->sock_raw = sock_raw;
+
+  printf("%d %d\n", sock_raw, ((probe_args*)args)->sock_raw);
   
   bzero(&ifr , sizeof(struct ifreq ));
   /* First Get the Interface Index */
 
   strncpy((char *) ifr.ifr_name , ((probe_args*)args)->tapping_iface.c_str(), IFNAMSIZ);
-  if((ioctl(sock_raw , SIOCGIFINDEX , & ifr )) == - 1)
+  if ((ioctl(sock_raw , SIOCGIFINDEX , & ifr )) == - 1)
     {
       printf("invalid interface: %s\n", ((probe_args*)args)->tapping_iface.c_str());
       exit(-1);
@@ -455,9 +458,27 @@ void *stage25(void *args)
 
 void	inject(char *buffer, int len, probe_args *args)
 {
+  struct ethhdr *eth = (struct ethhdr *)(buffer + 6);
+  struct sockaddr_ll socket_address;
+  struct ifreq if_idx;
+
+  memset(&if_idx, 0, sizeof(struct ifreq));
+  
+    /* Index of the network device */
+  memcpy(socket_address.sll_addr, eth->h_dest, 6);
+  /* Send packet */
+  strncpy(if_idx.ifr_name, args->tapping_iface.c_str(), args->tapping_iface.length() - 1);
+  if (ioctl(args->sock_raw, SIOCGIFINDEX, &if_idx) < 0)
+    perror("SIOCGIFINDEX");
+  
+  if (sendto(args->sock_raw, buffer, len, 0, (struct sockaddr*)&socket_address, sizeof(struct sockaddr_ll)) < 0)
+    perror("send");
+  printf("   |-Destination Address : %.2X-%.2X-%.2X-%.2X-%.2X-%.2X \n",
+	 eth->h_dest[0] , eth->h_dest[1] , eth->h_dest[2] , eth->h_dest[3] , eth->h_dest[4] , eth->h_dest[5] );
+
+
+  
   std::cout << "Sending " << len << "bytes" << std::endl;  
-  send(args->sock_raw, buffer, len, 0);
-  perror("send");
 }
 	    
 int	stage1(probe_args &args)
@@ -514,8 +535,15 @@ int	stage1(probe_args &args)
 	      std::cout << "stoping" << std::endl;
 	    }
 	    if (strncasecmp(buffer, "INJECT", 6) == 0)
-	    {
-	      inject(buffer + 6, n - 6,  &args);
+	      {
+
+		struct ethhdr *eth = (struct ethhdr *)(buffer + 6);
+		printf("   |-Destination Address : %.2X-%.2X-%.2X-%.2X-%.2X-%.2X \n",
+		       eth->h_dest[0] , eth->h_dest[1] , eth->h_dest[2] , eth->h_dest[3] , eth->h_dest[4] , eth->h_dest[5] );
+		printf("   |-Source Address      : %.2X-%.2X-%.2X-%.2X-%.2X-%.2X \n",
+		       eth->h_source[0] , eth->h_source[1] , eth->h_source[2] , eth->h_source[3] , eth->h_source[4] , eth->h_source[5] );
+		printf("   |-Protocol            : %u \n",(unsigned short)eth->h_proto);
+		inject(buffer + 6, n - 6,  &args);
 	    }
 
 	}
