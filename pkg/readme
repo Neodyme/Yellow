@@ -1,0 +1,3 @@
+dpkg -i yellow_0.9-1.deb	# Will try to install yellow, and fail due to dependencies
+apt-get -f install		# Will install all dependencies along with the yellow package that was waiting for them
+
