@@ -50,10 +50,7 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		print('Socket Created')
 
 		try:
-			# self.s.connect(('127.0.0.1', 1337))
-                        print("'{}' '{}' >>{}".format(ip, port, type(ip)))                        
-#                        self.s.connect(("195.154.71.44", 1337))
-                        self.s.connect((ip, 1337))
+                        self.s.connect((ip, port))
 
 		except socket.error:
 			print('Failed to connect socket')
@@ -94,15 +91,9 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		self.packetList = list()
 		self.packetNumber = 0
 		# TEST
-		self.addReceivedPacket([dict([('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:73'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '666'), ('Checksum', '666'), ('Data', 'DATA UQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZV')])])
-		self.addReceivedPacket([dict([('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:73'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '666'), ('Checksum', '666'), ('Data', 'DATA UQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZV')])])
-		self.addReceivedPacket([dict([('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:73'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '666'), ('Checksum', '666'), ('Data', 'DATA UQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDOHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZVUQDHGVVEZIUGRZV')])])
-		self.addReceivedPacket([dict([('ID', 1), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
-		self.addReceivedPacket([dict([('ID', 2), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
 		# END OF TEST
 		pass
 
-	# refaire l'add avec les bonnes lists
 	def addReceivedPacket(self, packet):
 		try:
 			self.packetNumber += 1
@@ -112,11 +103,6 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		except:
 			print("pass")
 			pass
-		# TEST
-		# "\r\n"
-		# TCP REF = [dict([('ID', 1), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])]
-		# UDP REF = [dict([('ID', 2), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])]
-		# END OF TEST
 		return
 
 	def addPacketLine(self, header):
@@ -210,8 +196,8 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		self.lineEditSourcePort.setText(packet[1]['Source Port'])
 		self.lineEditDestinationPort.setText(packet[1]['Destination Port'])
 		self.lineEditSequence.setText(packet[1]['Sequence'])
-		self.lineEditReconnaissance.setText(packet[1]['Reconnaissance'])
-		self.lineEditHeaderTCP.setText(packet[1]['TCP Header'])
+		self.lineEditReconnaissance.setText(packet[1]['Acknowledgement'])
+		self.lineEditHeaderTCP.setText(packet[1]['TCP Header Length'])
 		return
 
 	def loadUDP(self, packet):
@@ -245,7 +231,7 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 			self.loadUDP(packet)
 
 		document = QtGui.QTextDocument(self.plainTextEditData)
-		document.setPlainText(hex(int(packet[1]['Data']), 2))
+		document.setPlainText(binascii.unhexlify(document.toPlainText()))
 		documentLayout = QtGui.QPlainTextDocumentLayout(document)
 		document.setDocumentLayout(documentLayout)
 		self.plainTextEditData.setDocument(document)
@@ -253,38 +239,58 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		return
 
 	def sendPacket(self):
-		# self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'TCP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Sequence', 'fyqgjczei'), ('Reconnaissance', 'bhvebrib'), ('TCP Header', 'uvhzyb'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
-		# self.addReceivedPacket([dict([('Date', '01-01-2015'), ('Time', '21-05-00'), ('Mac Source', '00:0a:95:9d:68:16'), ('Mac Destination', '00:0a:95:9d:68:72'), ('Version', '42'), ('Header Length', '666'), ('TTL', '13'), ('Protocol', 'UDP'), ('IP Source', '192.168.1.10'), ('IP Destination', '192.168.1.11')]), dict([('Source Port', '4242'), ('Destination Port', '3737'), ('Size', '55'), ('Checksum', '199'), ('Data', 'DATA UQDHGVVEZIUGRZV')])])
-		packet = [dict([('', '')]), dict([('', '')])]
-		packet[0]['Time'] = self.lineEditTime.text()
+		packet = [{}, {}]
+
+                p = Ethernet()
 		packet[0]['Mac Destination'] = self.lineEditMacDestination.text()
 		packet[0]['Mac Source'] = self.lineEditMacSource.text()
-		packet[0]['Version'] = self.lineEditVersion.text()
-		packet[0]['Header Length'] = self.lineEditHeaderLength.text()
-		packet[0]['TTL'] = self.lineEditTTL.text()
+
+                p.dst = binascii.unhexlify("".join(packet[0]['Mac Destination'].split(':')))
+                p.src = binascii.unhexlify("".join(packet[0]['Mac Source'].split(":")))
+                p.data = IP()
+                p.type = 0x0800
+
+                print(p)
+
+                packet[0]['Time'] = self.lineEditTime.text()
+		packet[0]['Version'] = int(self.lineEditVersion.text())
+		packet[0]['Header Length'] = int(self.lineEditHeaderLength.text())
+		packet[0]['TTL'] = int(self.lineEditTTL.text())
 		packet[0]['Protocol'] = self.lineEditProtocol.text()
 		packet[0]['IP Source'] = self.lineEditIPSource.text()
 		packet[0]['IP Destination'] = self.lineEditIPDestination.text()
-		if self.groupBoxTCPPart.isEnabled():
-			packet[1]['Source Port'] = self.lineEditSourcePort.text()
-			packet[1]['Destination Port'] = self.lineEditDestinationPort.text()
-			packet[1]['Sequence'] = self.lineEditSequence.text()
-			packet[1]['Reconnaissance'] = self.lineEditReconnaissance.text()
-			packet[1]['Header TCP'] = self.lineEditHeaderTCP.text()
-		else:
-			packet[1]['Source Port'] = self.lineEditSourcePortUDP.text()
-			packet[1]['Destination Port'] = self.lineEditDestinationPortUDP.text()
-			packet[1]['Size'] = self.lineEditSizeUDP.text()
-			packet[1]['Checksum'] = self.lineEditChecksumUDP.text()
-		document = self.plainTextEditData.document()
-		packet[1]['Data'] = binascii.unhexlify(document.toPlainText())
-		# puis envoie sur la socket
 
-                p = dpkt.ethernet.Ethernet()
-                p.dst = (packet[0]['Mac Destination'].split(':')).join()
-                p.src = (packet[0]['Mac Source'].split(":")).join()
-                p.type = 0x0800
+                p.data.ttl = packet[0]['TTL']
+ 
+                p.data.src=socket.inet_aton(packet[0]['IP Source'])
+                p.data.dst=socket.inet_aton(packet[0]['IP Destination'] )
+
                 
+                if self.groupBoxTCPPart.isEnabled():
+                        payload = TCP()
+                        packet[1]['Source Port'] = int(self.lineEditSourcePort.text())
+                        payload.seq = int(self.lineEditSequence.text())
+                        packet[1]['Destination Port'] = int(self.lineEditDestinationPort.text())
+                        packet[1]['Sequence'] = self.lineEditSequence.text()
+                        packet[1]['Reconnaissance'] = self.lineEditReconnaissance.text()
+                        packet[1]['Header TCP'] = self.lineEditHeaderTCP.text()
+                elif self.groupBoxUDPPart.isEnabled():
+                        payload = UDP()
+                        packet[1]['Source Port'] = int(self.lineEditSourcePortUDP.text())
+                        packet[1]['Destination Port'] = int(self.lineEditDestinationPortUDP.text())
+                        packet[1]['Header Length'] = int(self.lineEditSizeUDP.text())
+                        packet[1]['Checksum'] = hex(self.lineEditChecksumUDP.text())
+                document = self.plainTextEditData.document()
+                payload.data = document.toPlainText()
+                payload.dport = packet[1]['Source Port']
+                payload.sport = packet[1]['Destination Port']
+                        
+                        
+#                except:
+#                        print("error")
+#                        pass
+                self.s.send("INJECT"+str(p))
+
                 return
 
 
@@ -303,15 +309,13 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		acknowledgement = tcph[3]
 		doff_reserved = tcph[4]
 		tcph_length = doff_reserved >> 4
-
-		TCPdict = {'PORT src':str(source_port), 'PORT dest':str(dest_port), 'Sequence':str(sequence), 'Acknowledgement':str(acknowledgement), 'TCP header length':str(tcph_length)}
-		l.append(TCPdict)
-
 		h_size = eth_length + iph_length + tcph_length * 4
 		data_size = len(packet) - h_size
 
+		TCPdict = {'Source Port':str(source_port), 'Destination Port':str(dest_port), 'Sequence':str(sequence), 'Acknowledgement':str(acknowledgement), 'TCP Header Length':str(data_size)}
+
 		data = packet[h_size:]
-		TCPdict['DATA'] = data
+		TCPdict['Data'] = data
 		l.append(TCPdict)
 		return
 
@@ -350,10 +354,11 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		dest_port = udph[1]
 		length = udph[2]
 		checksum = udph[3]
-		UDPdict = {'PORT src':str(source_port), 'PORT dest':str(dest_port), 'Header Length':str(length), 'Checksum':str(checksum)}      
 
 		h_size = eth_length + iph_length + udph_length
 		data_size = len(packet) - h_size
+
+		UDPdict = {'Source Port':str(source_port), 'Destination Port':str(dest_port), 'Header Length':str(length), 'Checksum':str(checksum), "Size":str(data_size)}      
 
 		data = packet[h_size:]
 		UDPdict['data'] = data
