@@ -13,4 +13,6 @@ Build Dependancies:
 
 python dependancies:
        python-pyside.qtcore
+       python-pyside.qtgui
+       python-dpkt
        python-pypcap

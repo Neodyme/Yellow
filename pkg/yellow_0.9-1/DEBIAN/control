@@ -1,0 +1,9 @@
+Package: yellow
+Version: 0.9-1
+Section: base
+Priority: optional
+Architecture: amd64
+Depends: python-pyside.qtcore (>= 1.1.1), python-pyside.qtgui (>= 1.1.1), python-pypcap (>= 1.1.2), python-dpkt (>= 1.6)
+Maintainer: Fastolph <schaeg_d@epitech.eu>
+Description: A small Network Utility
+ used for packet capture

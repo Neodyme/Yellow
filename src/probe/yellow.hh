@@ -5,7 +5,7 @@
 ** Login   <pprost@epitech.net>
 ** 
 ** Started on  Tue Dec 23 12:25:41 2014 Prost P.
-// Last update Tue Jan  6 19:19:16 2015 Prost P.
+// Last update Thu Jan  8 07:10:16 2015 dorian schaegis
 */
 
 #ifndef __YELLOW_HH_
@@ -23,6 +23,7 @@ public:
   std::string log_file;
   unsigned short listen_port;
   int sockfd;
+  int sock_raw;
   int quit;
   
   probe_args() {
