@@ -10,6 +10,10 @@ from threading import Thread
 import threading
 import thread
 
+from dpkt.ip import IP
+from dpkt.tcp import TCP
+from dpkt.udp import UDP
+from dpkt.ethernet import Ethernet
 
 def eth_addr (a):
 	b = "%.2x:%.2x:%.2x:%.2x:%.2x:%.2x" % (ord(a[0]) , ord(a[1]) , ord(a[2]), ord(a[3]), ord(a[4]) , ord(a[5]))
@@ -271,7 +275,13 @@ class Gui(QtGui.QWidget, GUI.Ui_GUI):
 		document = self.plainTextEditData.document()
 		packet[1]['Data'] = document.toPlainText()
 		# puis envoie sur la socket
-		return
+
+                p = dpkt.ethernet.Ethernet()
+                p.dst = (packet[0]['Mac Destination'].split(':')).join()
+                p.src = (packet[0]['Mac Source'].split(":")).join()
+                p.type = 0x0800
+                
+                return
 
 
 
